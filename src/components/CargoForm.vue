@@ -2,6 +2,7 @@
 import { ref } from "vue";
 const categorization = ref("Electronics");
 const TransIsRotated = ref(false);
+const massValue = ref(10);
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -39,13 +40,107 @@ function selectOption(val) {
         </ul>
       </Transition>
     </div>
-    <label for="destinationField">Cargo categorization: </label>
+    <div class="mass-slider-card">
+      <label for="scale-slider">Cargo Mass Scale:</label>
+      <div class="slider-wrapper">
+        <input
+          type="range"
+          id="scale-slider"
+          min="0"
+          max="2000"
+          step="10"
+          list="scale-markers"
+          v-model="massValue"
+        />
+
+        <div class="scale-ticks">
+          <span>10kg</span>
+          <span>500kg</span>
+          <span>1000kg</span>
+          <span>1500kg</span>
+          <span>2000kg</span>
+        </div>
+      </div>
+      <div class="mass-display">
+        <span id="massValue">{{ massValue }}</span> kg
+      </div>
+    </div>
   </form>
 </template>
 
 <style scoped>
 * {
   user-select: none;
+}
+
+label {
+  padding: 5px 10px;
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4b5563;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.slider-wrapper {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  background: #e5e7eb;
+  outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #059669; /* Emerald Green */
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    background 0.15s ease-in-out,
+    transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #047857;
+  transform: scale(1.1);
+}
+
+.scale-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 2px;
+  margin-top: 10px;
+}
+
+.scale-ticks span {
+  font-size: 12px;
+  color: #9ca3af;
+  position: relative;
+  text-align: center;
+}
+
+.scale-ticks span::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background-color: #d1d5db;
 }
 
 .destination-field {
@@ -81,8 +176,8 @@ function selectOption(val) {
   width: 300px;
   gap: 10px;
 
-  border: 1px solid;
-  padding: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  padding: 30px;
 }
 
 .custom-select {
