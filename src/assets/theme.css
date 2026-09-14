@@ -1,0 +1,29 @@
+[data-theme="dark"] {
+  --bg-main: #0b0f19;
+  --bg-panel: #131a2c;
+  --text-main: #f1f5f9;
+  --text-muted: #64748b;
+  --accent-glow: #38bdf8;
+  --border-color: #1e293b;
+}
+
+[data-theme="light"] {
+  --bg-main: #f8fafc;
+  --bg-panel: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --accent-glow: #0284c7;
+  --border-color: #e2e8f0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: "Inter", sans-serif;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
+}
