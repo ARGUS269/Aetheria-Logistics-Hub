@@ -3,6 +3,7 @@ import { ref } from "vue";
 const categorization = ref("Electronics");
 const TransIsRotated = ref(false);
 const massValue = ref(10);
+const valValue = ref(1000);
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -41,16 +42,19 @@ function selectOption(val) {
       </Transition>
     </div>
     <div class="mass-slider-card">
-      <label for="scale-slider">Cargo Mass Scale:</label>
+      <label for="scale-slider" class="scale-slider-label" :data-text="massValue"
+        >Cargo Mass Scale:</label
+      >
       <div class="slider-wrapper">
         <input
           type="range"
           id="scale-slider"
-          min="0"
+          min="10"
           max="2000"
           step="10"
           list="scale-markers"
           v-model="massValue"
+          class="slider-wrapper-mass"
         />
 
         <div class="scale-ticks">
@@ -61,10 +65,33 @@ function selectOption(val) {
           <span>2000kg</span>
         </div>
       </div>
-      <div class="mass-display">
-        <span id="massValue">{{ massValue }}</span> kg
+    </div>
+    <div class="val-slider-card">
+      <label for="scale-slider" class="scale-slider-label" :data-text="valValue"
+        >Financial Val Scale:</label
+      >
+      <div class="slider-wrapper">
+        <input
+          type="range"
+          id="scale-slider"
+          min="500"
+          max="50000"
+          step="10"
+          list="scale-markers"
+          v-model="valValue"
+          class="slider-wrapper-val"
+        />
+
+        <div class="scale-ticks">
+          <span>$500</span>
+          <span>$1000</span>
+          <span>$5000</span>
+          <span>$10000</span>
+          <span>$50000</span>
+        </div>
       </div>
     </div>
+    <button type="submit">Launch Cargo</button>
   </form>
 </template>
 
@@ -85,7 +112,7 @@ label {
 
 .slider-wrapper {
   position: relative;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
 input[type="range"] {
@@ -99,22 +126,65 @@ input[type="range"] {
   outline: none;
 }
 
+.scale-ticks span::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background-color: #d1d5db;
+}
+.scale-slider-label {
+  position: relative;
+  display: inline-block;
+  padding-right: 55px;
+}
+
+.scale-slider-label::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 50%;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 4px;
+  box-sizing: border-box;
+  white-space: nowrap;
+
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  border-radius: 4px;
+
+  transform: translateY(-50%);
+}
+
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: #059669; /* Emerald Green */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100%;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition:
-    background 0.15s ease-in-out,
-    transform 0.1s ease;
+}
+
+.slider-wrapper-mass::-webkit-slider-thumb {
+  background-image: url("../assets/truck-regular-full.svg");
+}
+
+.slider-wrapper-val::-webkit-slider-thumb {
+  background-image: url("../assets/dollar-sign-solid-full.svg");
 }
 
 input[type="range"]::-webkit-slider-thumb:hover {
-  background: #047857;
   transform: scale(1.1);
 }
 
@@ -130,17 +200,6 @@ input[type="range"]::-webkit-slider-thumb:hover {
   color: #9ca3af;
   position: relative;
   text-align: center;
-}
-
-.scale-ticks span::before {
-  content: "";
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 2px;
-  height: 6px;
-  background-color: #d1d5db;
 }
 
 .destination-field {
