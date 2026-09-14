@@ -3,7 +3,9 @@ import { ref } from "vue";
 const categorization = ref("Electronics");
 const TransIsRotated = ref(false);
 const massValue = ref(10);
-const valValue = ref(1000);
+const valValue = ref(500);
+const launch = ref("Launch Cargo");
+const isLaunched = ref(false);
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -12,6 +14,11 @@ function chevron() {
 function selectOption(val) {
   categorization.value = val;
   TransIsRotated.value = !TransIsRotated.value;
+}
+
+function cargoSubmit() {
+  launch.value = "---------------------";
+  isLaunched.value = true;
 }
 </script>
 
@@ -91,13 +98,70 @@ function selectOption(val) {
         </div>
       </div>
     </div>
-    <button type="submit">Launch Cargo</button>
+    <button
+      type="submit"
+      @click="cargoSubmit()"
+      :disabled="isLaunched"
+      :class="{ launchClass: isLaunched }"
+    >
+      {{ launch }}
+    </button>
   </form>
 </template>
 
 <style scoped>
 * {
   user-select: none;
+}
+
+button {
+  width: 100%;
+  align-self: center;
+  padding: 7px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+}
+
+button {
+  width: 100%;
+  align-self: center;
+  padding: 7px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 6px;
+}
+
+.launchClass {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.4em;
+  position: relative;
+  overflow: hidden;
+}
+
+.launchClass::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  width: 20px;
+  height: 20px;
+  background-image: url(../assets/truck-regular-full.svg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  top: 27%;
+  transform: translateY(-50%);
+  animation: slideIn 2s ease-in 0s normal 1 forwards;
+}
+
+@keyframes slideIn {
+  50% {
+    left: calc(100% - 50px);
+  }
+  100% {
+    left: calc(100% - 50px);
+  }
 }
 
 label {
