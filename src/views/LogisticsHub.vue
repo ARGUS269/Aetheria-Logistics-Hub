@@ -12,5 +12,7 @@ import CargoForm from "@/components/CargoForm.vue";
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+
+  background: rgba(0, 0, 0, 0.6);
 }
 </style>

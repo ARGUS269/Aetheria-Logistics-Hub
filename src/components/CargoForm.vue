@@ -1,11 +1,13 @@
 <script setup>
 import { ref } from "vue";
 const categorization = ref("Electronics");
+const destinationCity = ref("");
 const TransIsRotated = ref(false);
 const massValue = ref(10);
 const valValue = ref(500);
 const launch = ref("Launch Cargo");
 const isLaunched = ref(false);
+const inputError = ref(false);
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -17,8 +19,25 @@ function selectOption(val) {
 }
 
 function cargoSubmit() {
+  if (destinationCity.value === "") {
+    inputError.value = true;
+    return;
+  }
   launch.value = "---------------------";
   isLaunched.value = true;
+  categorization.value = "Electronics";
+  destinationCity.value = "";
+  massValue.value = 10;
+  valValue.value = 500;
+}
+
+function testInput() {
+  inputError.value = false;
+
+  if (destinationCity.value === "") {
+    inputError.value = true;
+    return;
+  }
 }
 </script>
 
@@ -31,8 +50,12 @@ function cargoSubmit() {
       type="text"
       class="destination-field"
       placeholder="e.g., Tokyo (NRT)..."
+      v-model="destinationCity"
+      @input="testInput"
     />
-    <label for="destinationField">Cargo categorization: </label>
+    <label for="destinationField" :class="{ errorHundle: inputError }"
+      >Cargo categorization:
+    </label>
     <div class="custom-select">
       <div class="select-trigger" @click="chevron">
         <span>{{ categorization }}</span>
@@ -121,15 +144,35 @@ button {
   cursor: pointer;
   border: 0;
   border-radius: 6px;
+  background-color: #e5e7eb;
 }
 
-button {
-  width: 100%;
-  align-self: center;
-  padding: 7px;
-  cursor: pointer;
-  border: 0;
-  border-radius: 6px;
+.errorHundle {
+  position: relative;
+}
+
+.errorHundle::before {
+  content: "Please enter A destination City";
+  position: absolute;
+  top: -85%;
+  left: 10px;
+  font-size: 0.7em;
+  width: max-content;
+  height: auto;
+  color: red;
+  margin-top: 5px;
+}
+
+input[type="text"] {
+  margin-bottom: 10px;
+}
+
+button:hover {
+  background-color: #cccccc;
+}
+
+.launchClass:hover {
+  background-color: #e5e7eb;
 }
 
 .launchClass {
@@ -138,6 +181,7 @@ button {
   letter-spacing: 0.4em;
   position: relative;
   overflow: hidden;
+  background-color: #e5e7eb;
 }
 
 .launchClass::before {
@@ -301,6 +345,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
 
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   padding: 30px;
+  background-color: white;
 }
 
 .custom-select {
