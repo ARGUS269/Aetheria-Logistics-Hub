@@ -1,5 +1,9 @@
-<script setup></script>
+<script setup>
+import CargoForm from "@/components/CargoForm.vue";
+</script>
 
-<template>Hello</template>
+<template>
+  <CargoForm />
+</template>
 
 <style scoped></style>
