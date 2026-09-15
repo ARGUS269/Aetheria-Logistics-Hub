@@ -8,9 +8,25 @@ const valValue = ref(500);
 const launch = ref("Launch Cargo");
 const isLaunched = ref(false);
 const inputError = ref(false);
+const emit = defineEmits(["SubmitClicked"]);
+
+const props = defineProps({
+  cargoManifest: {
+    type: Array,
+    required: true,
+  },
+});
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
+}
+
+function isDuplicated(val) {
+  //5004
+  props.cargoManifest.some((value) => {
+    if (val === value.id.slice(-4)) return isDuplicated(val + 1);
+  });
+  return val;
 }
 
 function selectOption(val) {
@@ -19,16 +35,30 @@ function selectOption(val) {
 }
 
 function cargoSubmit() {
+  console.log(destinationCity.value);
+
   if (destinationCity.value === "") {
     inputError.value = true;
     return;
   }
   launch.value = "---------------------";
   isLaunched.value = true;
-  categorization.value = "Electronics";
-  destinationCity.value = "";
-  massValue.value = 10;
-  valValue.value = 500;
+  const intervalID = setInterval(() => {
+    emit("submit-clicked", {
+      id: `TRK-${isDuplicated(Date.now().toString().slice(-4))}`,
+      destination: destinationCity.value,
+      cargoType: categorization.value,
+      weight: massValue.value,
+      value: valValue.value,
+      status: "MANIFEST_CREATED",
+      transitProgress: 0,
+    });
+    categorization.value = "Electronics";
+    destinationCity.value = "";
+    massValue.value = 10;
+    valValue.value = 500;
+    clearInterval(intervalID);
+  }, 2000);
 }
 
 function testInput() {
@@ -196,7 +226,7 @@ button:hover {
   background-size: contain;
   top: 27%;
   transform: translateY(-50%);
-  animation: slideIn 2s ease-in 0s normal 1 forwards;
+  animation: slideIn 2s ease-in normal 1 forwards;
 }
 
 @keyframes slideIn {
@@ -343,7 +373,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   width: 300px;
   gap: 10px;
 
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
   padding: 30px;
   background-color: white;
 }
