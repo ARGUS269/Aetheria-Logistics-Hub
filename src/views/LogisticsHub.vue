@@ -3,16 +3,16 @@ import CargoForm from "@/components/CargoForm.vue";
 </script>
 
 <template>
-  <div class="dashboard-view"><CargoForm /></div>
+  <div class="dashboard-view">
+    <CargoForm />
+  </div>
 </template>
 
 <style scoped>
 .dashboard-view {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-
-  background: rgba(0, 0, 0, 0.6);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>
