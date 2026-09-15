@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import CargoForm from "@/components/CargoForm.vue";
+import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 const isClicked = ref(false);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
@@ -29,13 +30,13 @@ function submitClicked(val) {
   isClicked.value = false;
   cargoManifest.value.push(val);
   console.log(cargoManifest.value);
-
 }
 </script>
 
 <template>
   <div class="dashboard-items" @click="isClicked = false">
     <button @click="isClicked = !isClicked" @click.stop>Click Me</button>
+    <AnalyticsBanner :cargoManifest="cargoManifest" />
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
@@ -49,8 +50,6 @@ function submitClicked(val) {
   width: 100vw;
   min-height: 100vh;
   position: fixed;
-  top: 0;
-  left: 0;
 }
 .dashboard-view {
   position: absolute;

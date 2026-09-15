@@ -5,10 +5,18 @@ import { ref } from "vue";
 <template>
   <div class="app-layout">
     <nav class="navbar">
-      <div class="nav-brand">AG</div>
-      <div class="nav-brand"></div>
-      <div class="nav-links">
-        <RouterLink to="/logistic" class="nav-item"><i class="fa-solid fa-truck"></i></RouterLink>
+      <div class="top">
+        <div class="nav-brand">AG</div>
+        <div class="nav-links">
+          <RouterLink to="/logistic" class="nav-item">
+            <i class="fa-solid fa-truck"></i>
+          </RouterLink>
+        </div>
+      </div>
+      <div class="bottom">
+        <RouterLink to="/settings" class="nav-item">
+          <i class="fa-solid fa-gear"></i>
+        </RouterLink>
       </div>
     </nav>
 
@@ -19,49 +27,82 @@ import { ref } from "vue";
 </template>
 
 <style>
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.top,
+.bottom {
+  margin: 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .navbar {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   background-color: #ffffff;
-  padding: 8px 12px;
-  gap: 10px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid #e2e8f0;
+  padding: 8px 6px;
+  gap: 20px;
+  box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid #e2e8f0;
   height: 100vh;
-  width: fit-content;
+  width: 50px;
+  flex-shrink: 0;
+
+  position: relative;
+  z-index: 50;
+}
+.app-viewport {
+  flex-grow: 1;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 .nav-brand {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #5c4bb6;
+  color: #4b5563;
   letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+i{
+  color: #4b5563;
 }
 
 .nav-links {
   display: flex;
+  flex-direction: column;
   gap: 20px;
+  width: 100%;
 }
 
 .nav-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-decoration: none;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #64748b;
-  padding: 8px 16px;
+  font-size: 1.25rem;
+  padding: 12px;
+  color: #333;
   border-radius: 6px;
   transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+* {
+  user-select: none;
 }
 
 .nav-item:hover {
-  color: #5c4bb6;
   background-color: #f1f5f9;
-}
-
-.router-link-active {
-  color: #5c4bb6;
-  background-color: #efecf9;
+  color: #0f172a;
 }
 </style>
