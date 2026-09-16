@@ -26,21 +26,36 @@ const cargoManifest = ref([
   },
 ]);
 
+const totalVol = computed(() => {
+  return cargoManifest.value.reduce((accumulator, item) => {
+    return accumulator + parseInt(item.value);
+  }, 0);
+});
+
+const totalMass = computed(() => {
+  return cargoManifest.value.reduce((accumulator, item) => {
+    return accumulator + parseInt(item.weight);
+  }, 0);
+});
+
 function submitClicked(val) {
   isClicked.value = false;
   cargoManifest.value.push(val);
-  console.log(cargoManifest.value);
 }
 </script>
 
 <template>
   <div class="dashboard-items" @click="isClicked = false">
     <button @click="isClicked = !isClicked" @click.stop>Click Me</button>
-    <AnalyticsBanner :cargoManifest="cargoManifest" />
+    <button @click="cargoManifest.pop(-1)" @click.stop>Click Me</button>
+    <AnalyticsBanner
+      :cargoManifest="cargoManifest"
+      :totals="{ previousVolValue: totalVol, previousMassValue: totalMass }"
+    />
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked" :cargoManifest="cargoManifest" />
+      <CargoForm @submit-clicked="submitClicked" />
     </div>
   </Transition>
 </template>

@@ -1,26 +1,28 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 
 const props = defineProps({
   cargoManifest: {
     type: Array,
     required: true,
   },
+  baselineVolume: {
+    type: Number,
+    default: 37000,
+  },
+  baselineMass: {
+    type: Number,
+    default: 570,
+  },
 });
 
-console.log(props.cargoManifest);
+const table = ref([]);
 
 const totalVol = computed(() => {
   return props.cargoManifest.reduce((accumulator, item) => {
     return accumulator + parseInt(item.value);
   }, 0);
 });
-
-const trendVol = Math.round(
-  ((totalVol.value - (totalVol.value - props.cargoManifest.at(-1).value)) /
-    (totalVol.value - props.cargoManifest.at(-1).value)) *
-    100,
-);
 
 const totalCustomHolds = computed(() => {
   return props.cargoManifest.reduce((accumulator, item) => {
@@ -35,16 +37,19 @@ const totalMass = computed(() => {
   }, 0);
 });
 
-const trendMass = Math.round(
-  ((totalMass.value - (totalMass.value - props.cargoManifest.at(-1).weight)) /
-    (totalMass.value - props.cargoManifest.at(-1).weight)) *
-    100,
-);
+const calculatedTrendVolume = computed(() => {
+  if (props.baselineVolume === 0) return "0%";
 
-const trendMassPrint = trendMass > 0 ? `+${trendMass}` : `-${trendMass}`;
-const trendVolPrint = trendVol > 0 ? `+${trendVol}` : `-${trendVol}`;
+  const percentageChange = ((totalVol.value - props.baselineVolume) / props.baselineVolume) * 100;
 
-console.log(trendMass);
+  const sign = percentageChange > 0 ? "+" : "";
+  return `${sign}${Math.round(percentageChange)}%`;
+});
+
+// 3. Class binary trigger using props instead of missing .value references
+const isPositiveVolumeTrend = computed(() => {
+  return totalVol.value >= props.baselineVolume;
+});
 </script>
 
 <template>
@@ -92,14 +97,13 @@ console.log(trendMass);
 
 .value::after {
   position: absolute;
-  right: -30px;
+  right: -37px;
   bottom: -5px;
   font-size: 0.7em;
-  width: max-content;
+  width: 40px;
   height: auto;
   font-size: 0.75rem;
   font-weight: 600;
-  padding: 2px 6px;
   border-radius: 4px;
 }
 
