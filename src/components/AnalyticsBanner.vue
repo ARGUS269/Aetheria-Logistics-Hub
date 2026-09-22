@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 
 const props = defineProps({
   cargoManifest: {
@@ -16,7 +16,14 @@ const props = defineProps({
   },
 });
 
-const table = ref([]);
+const previousVolValue = ref(props.baselineVolume);
+const previousMassValue = ref(props.baselineMass);
+
+const trendMass = ref(0);
+const trendVol = ref(0);
+
+const trendMassPrint = ref("");
+const trendVolPrint = ref("");
 
 const totalVol = computed(() => {
   return props.cargoManifest.reduce((accumulator, item) => {
@@ -37,19 +44,56 @@ const totalMass = computed(() => {
   }, 0);
 });
 
-const calculatedTrendVolume = computed(() => {
-  if (props.baselineVolume === 0) return "0%";
+watch(
+  totalVol,
+  (newTotal, oldTotal) => {
+    if (oldTotal === undefined || oldTotal === null || oldTotal === 0) {
+      previousVolValue.value = props.baselineVolume || newTotal || 1;
+      trendVol.value = 0;
+      trendVolPrint.value = "0%";
+      return;
+    }
 
-  const percentageChange = ((totalVol.value - props.baselineVolume) / props.baselineVolume) * 100;
+    previousVolValue.value = oldTotal === 0 ? props.baselineVolume : oldTotal;
 
-  const sign = percentageChange > 0 ? "+" : "";
-  return `${sign}${Math.round(percentageChange)}%`;
-});
+    if (previousVolValue.value === 0) {
+      trendVol.value = newTotal > 0 ? 100 : 0;
+    } else {
+      trendVol.value = Math.round(
+        ((newTotal - previousVolValue.value) / previousVolValue.value) * 100,
+      );
+    }
 
-// 3. Class binary trigger using props instead of missing .value references
-const isPositiveVolumeTrend = computed(() => {
-  return totalVol.value >= props.baselineVolume;
-});
+    // 4. Print formatting rules
+    trendVolPrint.value = trendVol.value >= 0 ? `+${trendVol.value}%` : `${trendVol.value}%`;
+  },
+  { deep: true, immediate: true },
+);
+
+watch(
+  totalMass,
+  (newTotal, oldTotal) => {
+    if (oldTotal === undefined || oldTotal === null || oldTotal === 0) {
+      previousMassValue.value = props.baselineMass || newTotal || 1;
+      trendMass.value = 0;
+      trendMassPrint.value = "0%";
+      return;
+    }
+
+    previousMassValue.value = oldTotal === 0 ? props.baselineMass : oldTotal;
+
+    if (previousMassValue.value === 0) {
+      trendMass.value = newTotal > 0 ? 100 : 0;
+    } else {
+      trendMass.value = Math.round(
+        ((newTotal - previousMassValue.value) / previousMassValue.value) * 100,
+      );
+    }
+
+    trendMassPrint.value = trendMass.value >= 0 ? `+${trendMass.value}%` : `${trendMass.value}%`;
+  },
+  { deep: true, immediate: true },
+);
 </script>
 
 <template>
@@ -59,7 +103,7 @@ const isPositiveVolumeTrend = computed(() => {
       <div class="values">
         <div
           class="value val"
-          :class="cargoManifest.length > 0 && trendVol > 0 ? 'trend-positive' : 'trend-negative'"
+          :class="cargoManifest.length > 0 && trendVol >= 0 ? 'trend-positive' : 'trend-negative'"
           :data-text="trendVolPrint"
         >
           {{ totalVol }}
@@ -71,7 +115,7 @@ const isPositiveVolumeTrend = computed(() => {
       <div class="values">
         <div
           class="value mass"
-          :class="cargoManifest.length > 0 && trendMass > 0 ? 'trend-positive' : 'trend-negative'"
+          :class="cargoManifest.length > 0 && trendMass >= 0 ? 'trend-positive' : 'trend-negative'"
           :data-text="trendMassPrint"
         >
           {{ totalMass }}
@@ -97,7 +141,7 @@ const isPositiveVolumeTrend = computed(() => {
 
 .value::after {
   position: absolute;
-  right: -37px;
+  right: -40px;
   bottom: -5px;
   font-size: 0.7em;
   width: 40px;

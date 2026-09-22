@@ -47,7 +47,7 @@ function submitClicked(val) {
 <template>
   <div class="dashboard-items" @click="isClicked = false">
     <button @click="isClicked = !isClicked" @click.stop>Click Me</button>
-    <button @click="cargoManifest.pop(-1)" @click.stop>Click Me</button>
+    <button @click="cargoManifest.pop(-1)">Click Me</button>
     <AnalyticsBanner
       :cargoManifest="cargoManifest"
       :totals="{ previousVolValue: totalVol, previousMassValue: totalMass }"
@@ -55,7 +55,7 @@ function submitClicked(val) {
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked" />
+      <CargoForm @submit-clicked="submitClicked" :cargoManifest="cargoManifest" />
     </div>
   </Transition>
 </template>
