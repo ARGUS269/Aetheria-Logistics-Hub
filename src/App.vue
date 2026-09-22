@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from "vue";
+const isClicked = ref(false);
 </script>
 
 <template>
@@ -8,13 +9,23 @@ import { ref } from "vue";
       <div class="top">
         <div class="nav-brand">AG</div>
         <div class="nav-links">
-          <RouterLink to="/logistic" class="nav-item">
+          <RouterLink
+            to="/logistic"
+            class="nav-item"
+            :class="{ hover: !isClicked }"
+            @click="isClicked = false"
+          >
             <i class="fa-solid fa-truck"></i>
           </RouterLink>
         </div>
       </div>
       <div class="bottom">
-        <RouterLink to="/settings" class="nav-item">
+        <RouterLink
+          to="/settings"
+          class="nav-item"
+          :class="{ hover: isClicked }"
+          @click="isClicked = true"
+        >
           <i class="fa-solid fa-gear"></i>
         </RouterLink>
       </div>
@@ -72,7 +83,7 @@ import { ref } from "vue";
   margin-bottom: 10px;
 }
 
-i{
+i {
   color: #4b5563;
 }
 
@@ -100,8 +111,7 @@ i{
   user-select: none;
 }
 
-.nav-item:hover {
+.hover {
   background-color: #f1f5f9;
-  color: #0f172a;
 }
 </style>

@@ -1,26 +1,90 @@
 <script setup>
 import { ref } from "vue";
+
+const emit = defineEmits(["SubmitClicked"]);
+
+function cargoSubmit() {
+  console.log(destinationCity.value);
+
+  if (destinationCity.value === "") {
+    inputError.value = true;
+    return;
+  }
+  launch.value = "---------------------";
+  isLaunched.value = true;
+  const intervalID = setInterval(() => {
+    emit("submit-clicked", {
+      id: `TRK-${isDuplicated(Date.now().toString().slice(-4))}`,
+      destination: destinationCity.value,
+      cargoType: categorization.value,
+      weight: massValue.value,
+      value: valValue.value,
+      status: "MANIFEST_CREATED",
+      transitProgress: 0,
+    });
+    categorization.value = "Electronics";
+    destinationCity.value = "";
+    massValue.value = 10;
+    valValue.value = 500;
+    clearInterval(intervalID);
+  }, 2000);
+}
+
+function testInput() {
+  inputError.value = false;
+
+  if (destinationCity.value === "") {
+    inputError.value = true;
+    return;
+  }
+}
 </script>
 
 <template>
-  <div class="infos">
-    <div class="user-name"></div>
-    <div class="user-photo"></div>
-    <div class="user-desc"></div>
-  </div>
-  <div class="basics">
-    <div class="perso-photo"></div>
-    <div class="perso-name"></div>
-    <div class="perso-email"></div>
-  </div>
-  <div class="pereferences">
-    <div class="theme"></div>
-    <div class="language"></div>
-    <div class="date-format"></div>
-  </div>
+  <form @submit.prevent="dispatchSignal" class="form-container">
+    <h2>Welcome back</h2>
+    <p>Sign in to access you project and assets</p>
+    <label for="email">Email: </label>
+    <input
+      type="email"
+      name="email"
+      id="email"
+      class="email"
+      placeholder="you@company.com"
+      v-model="emailField"
+      @input="testEmailInput"
+    />
+    <label for="password">Password: </label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      class="email"
+      placeholder="........"
+      v-model="passwordField"
+      @input="testPasswordInput"
+    />
+    <div class="mass-slider-card">
+      <label for="scale-slider" class="scale-slider-label" :data-text="massValue"
+        >Cargo Mass Scale:</label
+      >
+    </div>
+    <button
+      type="submit"
+      @click="cargoSubmit()"
+      :disabled="isLaunched"
+      :class="{ launchClass: isLaunched }"
+    >
+      {{ launch }}
+    </button>
+  </form>
 </template>
 
 <style scoped>
+* {
+  user-select: none;
+}
+
 button {
   width: 100%;
   align-self: center;
@@ -46,11 +110,6 @@ button {
   color: red;
   margin-top: 5px;
 }
-
-input[type="text"] {
-  margin-bottom: 10px;
-}
-
 button:hover {
   background-color: #cccccc;
 }
@@ -128,56 +187,11 @@ input[type="range"] {
   height: 6px;
   background-color: #d1d5db;
 }
-.scale-slider-label {
-  position: relative;
-  display: inline-block;
-  padding-right: 55px;
-}
 
-.scale-slider-label::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 50%;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 4px;
-  box-sizing: border-box;
-  white-space: nowrap;
-
-  border: 1px solid #e5e7eb;
-  background-color: white;
-  border-radius: 4px;
-
-  transform: translateY(-50%);
-}
-
-input[type="range"]::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 100%;
-  cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.slider-wrapper-mass::-webkit-slider-thumb {
-  background-image: url("../assets/truck-regular-full.svg");
-}
-
-.slider-wrapper-val::-webkit-slider-thumb {
-  background-image: url("../assets/dollar-sign-solid-full.svg");
-}
-
-input[type="range"]::-webkit-slider-thumb:hover {
-  transform: scale(1.1);
+h2,
+p {
+  text-align: center;
+  margin: 0;
 }
 
 .scale-ticks {
@@ -194,7 +208,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   text-align: center;
 }
 
-.destination-field {
+.email {
   font-family: "Roboto", "Inter", sans-serif;
   font-size: 1rem;
   font-weight: 500;
@@ -206,7 +220,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
   outline: none;
 }
 
-.destination-field::placeholder {
+.email::placeholder {
   color: #888888;
   font-weight: 400;
 }
