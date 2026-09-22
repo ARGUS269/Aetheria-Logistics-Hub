@@ -2,6 +2,27 @@
 import { ref } from "vue";
 
 const isShow = ref(false);
+const inputError = ref(false);
+const emailField = ref("");
+const passwordField = ref("");
+
+function testEmailInput() {
+  inputError.value = false;
+
+  if (emailField.value === "") {
+    inputError.value = true;
+    return;
+  }
+}
+
+function cargoSubmit() {
+  const fields = emailField.value.split("@");
+
+  if (fields.length !== 2 || fields[1] !== "agcpn.com") {
+    inputError.value = true;
+    return;
+  }
+}
 </script>
 
 <template>
@@ -14,16 +35,16 @@ const isShow = ref(false);
       name="email"
       id="email"
       class="email"
-      placeholder="you@company.com"
+      placeholder="you@agcpn.com"
       v-model="emailField"
       @input="testEmailInput"
     />
-    <label for="password">Password: </label>
+    <label for="password" :class="{ error: inputError }">Password: </label>
     <div class="pass">
       <input
         name="password"
         id="password"
-        class="email password"
+        class="password"
         placeholder="........"
         v-model="passwordField"
         @input="testPasswordInput"
@@ -35,26 +56,73 @@ const isShow = ref(false);
         :class="{ 'fa-eye': isShow }"
       ></i>
     </div>
+    <div class="form-actions-row">
+      <label class="remember-me">
+        <input type="checkbox" />
+        <span>Remember me</span>
+      </label>
 
-    <div class="mass-slider-card">
-      <label for="scale-slider" class="scale-slider-label" :data-text="massValue"
-        >Cargo Mass Scale:</label
-      >
+      <a href="#" class="forgot-password">Forgot password?</a>
     </div>
-    <button
-      type="submit"
-      @click="cargoSubmit()"
-      :disabled="isLaunched"
-      :class="{ launchClass: isLaunched }"
-    >
-      Sign In
-    </button>
+
+    <button type="submit" @click="cargoSubmit()">Sign In</button>
+    <div class="form-actions-row-contact">
+        <span>Don't have an account?</span>
+      <a href="#" class="contact-us">Contact Us</a>
+    </div>
   </form>
 </template>
 
 <style scoped>
 * {
   user-select: none;
+}
+
+.form-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.form-actions-row-contact{
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #4b5563;
+  cursor: pointer;
+  user-select: none;
+}
+
+.remember-me input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #2563eb;
+}
+
+.forgot-password, .contact-us {
+  font-size: 0.875rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.forgot-password:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
 }
 
 button {
@@ -68,20 +136,25 @@ button {
   font-weight: bold;
 }
 
-.email {
+.error {
   position: relative;
+  padding-top: 10px;
 }
 
-.email::before {
-  content: "Please enter A valid Email";
+.error::before {
+  content: "Please enter a valid email";
   position: absolute;
-  top: -85%;
+  top: -25%;
   left: 10px;
   font-size: 0.7em;
   width: max-content;
   height: auto;
   color: red;
-  margin-top: 5px;
+}
+
+span {
+  font-weight: 300;
+  font-size: 14px;
 }
 
 .pass {
@@ -121,7 +194,8 @@ p {
   margin: 0;
 }
 
-.email {
+.email,
+.password {
   font-family: "Roboto", "Inter", sans-serif;
   font-size: 1rem;
   font-weight: 500;
