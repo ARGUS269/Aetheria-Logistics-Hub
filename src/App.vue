@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from "vue";
+import LoginForm from "@/components/LoginForm.vue";
+
 const isClicked = ref(false);
 </script>
 
 <template>
   <div class="app-layout">
-
     <nav class="navbar">
       <div class="top">
         <div class="nav-brand">AG</div>
@@ -34,17 +35,11 @@ const isClicked = ref(false);
 
     <div class="app-main-container">
 
-      <header class="navbar-top">
-        <div class="notifications"><i class="fa-regular fa-bell"></i></div>
-        <div class="messages"><i class="fa-regular fa-message"></i></div>
-        <div class="login"><i class="fa-regular fa-user"></i></div>
-      </header>
 
       <main class="app-viewport">
         <RouterView />
       </main>
     </div>
-
   </div>
 </template>
 
@@ -55,7 +50,6 @@ const isClicked = ref(false);
   user-select: none;
   box-sizing: border-box;
 }
-
 
 .app-layout {
   display: flex;
@@ -78,7 +72,8 @@ const isClicked = ref(false);
   flex-shrink: 0;
   z-index: 50;
 }
-.top, .bottom {
+.top,
+.bottom {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -128,24 +123,9 @@ const isClicked = ref(false);
   overflow: hidden;
 }
 
-.navbar-top {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0 24px;
-  gap: 24px;
-  width: 100%;
-  height: 56px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-  flex-shrink: 0;
-}
 
-.navbar-top div {
-  cursor: pointer;
-  font-size: 1.15rem;
-}
+
+
 
 .app-viewport {
   flex-grow: 1;

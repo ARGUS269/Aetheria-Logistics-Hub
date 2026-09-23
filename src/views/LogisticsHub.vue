@@ -44,12 +44,23 @@ function submitClicked(val) {
   isClicked.value = false;
   cargoManifest.value.push(val);
 }
+
+function clicked() {
+  LoginisClicked.value = false;
+  isClicked.value = false;
+}
 </script>
 
 <template>
-  <div class="dashboard-items" @click="isClicked = false">
+  <header class="navbar-top" @click="clicked">
+    <div class="notifications"><i class="fa-regular fa-bell"></i></div>
+    <div class="messages"><i class="fa-regular fa-message"></i></div>
+    <div class="login" @click="LoginisClicked = !LoginisClicked" @click.stop>
+      <i class="fa-regular fa-user"></i>
+    </div>
+  </header>
+  <div class="dashboard-items" @click="clicked">
     <button @click="isClicked = !isClicked" @click.stop>Click Me</button>
-    <button @click="LoginisClicked = !LoginisClicked" @click.stop>Click Me</button>
     <AnalyticsBanner
       :cargoManifest="cargoManifest"
       :totals="{ previousVolValue: totalVol, previousMassValue: totalMass }"
@@ -61,14 +72,18 @@ function submitClicked(val) {
     </div>
   </Transition>
 
-  <Transition name="shrink-square">
-    <div class="dashboard-view" v-if="LoginisClicked" @click.stop>
+  <Transition name="shrink-square-login">
+    <div class="dashboard-view-login" v-if="LoginisClicked" @click.stop>
       <LoginForm />
     </div>
   </Transition>
 </template>
 
 <style scoped>
+i {
+  color: #4b5563;
+}
+
 .dashboard-items {
   width: 100vw;
   min-height: 100vh;
@@ -92,5 +107,44 @@ function submitClicked(val) {
 .shrink-square-leave-to {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0.4);
+}
+
+.dashboard-view-login {
+  position: absolute;
+  top: 50px;
+  right: 30px;
+}
+
+.shrink-square-login-enter-active,
+.shrink-square-login-leave-active {
+  transition:
+    opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  transform-origin: top right;
+}
+
+.shrink-square-login-enter-from,
+.shrink-square-login-leave-to {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+  gap: 24px;
+  width: 100%;
+  height: 56px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  flex-shrink: 0;
+}
+
+.navbar-top div {
+  cursor: pointer;
+  font-size: 1.15rem;
 }
 </style>

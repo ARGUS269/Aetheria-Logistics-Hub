@@ -92,8 +92,6 @@ function cargoSubmit() {
   justify-content: center;
   align-items: center;
   width: 100%;
-  min-height: calc(100vh - 56px); /* Fills screen height space cleanly below header top bar */
-  padding: 20px;
 }
 
 .form-container {
