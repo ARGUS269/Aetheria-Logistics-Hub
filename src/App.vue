@@ -1,7 +1,5 @@
 <script setup>
 import { ref } from "vue";
-import LoginForm from "@/components/LoginForm.vue";
-
 const isClicked = ref(false);
 </script>
 

@@ -5,6 +5,9 @@ import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 import LoginForm from "@/components/LoginForm.vue";
 const isClicked = ref(false);
 const LoginisClicked = ref(false);
+const TransIsRotated = ref(false);
+const isLogin = ref(false);
+const loginObject = ref({});
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
 const cargoManifest = ref([
@@ -45,14 +48,39 @@ function submitClicked(val) {
   cargoManifest.value.push(val);
 }
 
+function LoginClicked(val) {
+  isLogin.value = val.isLogin;
+  console.log(val);
+
+  loginObject.value = val;
+}
+
 function clicked() {
   LoginisClicked.value = false;
   isClicked.value = false;
+  TransIsRotated.value = false;
+}
+
+function chevron() {
+  TransIsRotated.value = !TransIsRotated.value;
 }
 </script>
 
 <template>
   <header class="navbar-top" @click="clicked">
+    <div class="custom-select" v-if="isLogin" @click.stop>
+      <div class="select-trigger" @click="chevron">
+        <span>{{ loginObject.fullName }}</span>
+        <div>
+          <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+        </div>
+      </div>
+      <Transition name="shrink-square">
+        <ul class="select-options" v-if="TransIsRotated">
+          <li class="first-li" @click="chevron">{{loginObject.fullName}}</li>
+        </ul>
+      </Transition>
+    </div>
     <div class="notifications"><i class="fa-regular fa-bell"></i></div>
     <div class="messages"><i class="fa-regular fa-message"></i></div>
     <div class="login" @click="LoginisClicked = !LoginisClicked" @click.stop>
@@ -74,7 +102,7 @@ function clicked() {
 
   <Transition name="shrink-square-login">
     <div class="dashboard-view-login" v-if="LoginisClicked" @click.stop>
-      <LoginForm />
+      <LoginForm @login-infos="LoginClicked" />
     </div>
   </Transition>
 </template>
@@ -82,6 +110,13 @@ function clicked() {
 <style scoped>
 i {
   color: #4b5563;
+}
+
+.loginName {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .dashboard-items {
@@ -130,6 +165,7 @@ i {
 }
 
 .navbar-top {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -146,5 +182,75 @@ i {
 .navbar-top div {
   cursor: pointer;
   font-size: 1.15rem;
+}
+
+.custom-select {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 99;
+}
+
+.select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  list-style: none;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #cccccc;
+  margin-top: 5px;
+  transform-origin: center top;
+  z-index: 10;
+}
+
+.select-options li {
+  color: #333333;
+
+  padding: 10px 14px;
+}
+
+.select-options li:hover {
+  background-color: #cccccc;
+}
+
+.shrink-square-enter-active,
+.shrink-square-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.shrink-square-enter-from,
+.shrink-square-leave-to {
+  opacity: 0;
+  transform: scale(0.4);
+}
+
+.select-trigger {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+
+  color: #333333;
+
+  padding: 10px 14px;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  gap: 10px;
+}
+
+.select-trigger div i {
+  transition: transform 0.3s ease;
+}
+
+.rotated-state {
+  transform: rotate(180deg);
 }
 </style>

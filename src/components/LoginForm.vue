@@ -3,8 +3,12 @@ import { ref } from "vue";
 
 const isShow = ref(false);
 const inputError = ref(false);
+const remember = ref(false);
 const emailField = ref("");
 const passwordField = ref("");
+const isLogin = ref(false);
+
+const emit = defineEmits(["LoginClicked"]);
 
 function testEmailInput() {
   inputError.value = false;
@@ -15,19 +19,47 @@ function testEmailInput() {
   }
 }
 
-function cargoSubmit() {
+function dispatchSignal() {
   const fields = emailField.value.split("@");
+  const pointFields = emailField.value.split(".");
 
   if (fields.length !== 2 || fields[1] !== "agcpn.com") {
     inputError.value = true;
     return;
   }
+
+  if (pointFields.length !== 2) {
+    inputError.value = true;
+    return;
+  }
+
+  isLogin.value = true;
+
+  emit("login-infos", {
+    fullName: "AKOUDAD Abdessamad",
+    email: emailField.value,
+    password: passwordField.value,
+    isRemembered: remember.value,
+    isLogin: isLogin.value,
+  });
+}
+
+function dispatchSignalLogOut() {
+  isLogin.value = false;
+
+  remember.value = false;
+  emailField.value = "";
+  passwordField.value = "";
+
+  emit("login-infos", {
+    isLogin: isLogin.value,
+  });
 }
 </script>
 
 <template>
   <div class="login-page-wrapper">
-    <form @submit.prevent="dispatchSignal" class="form-container">
+    <form @submit.prevent="dispatchSignal" class="form-container" v-if="!isLogin">
       <h2>Welcome back</h2>
       <p class="subtitle">Sign in to access your project and assets</p>
 
@@ -42,7 +74,6 @@ function cargoSubmit() {
         @input="testEmailInput"
       />
 
-      <!-- Tied the error label back to standard flow safely -->
       <label for="password" :class="{ error: inputError }">Password: </label>
       <div class="pass">
         <input
@@ -63,7 +94,7 @@ function cargoSubmit() {
 
       <div class="form-actions-row">
         <label class="remember-me">
-          <input type="checkbox" />
+          <input type="checkbox" v-model="remember" />
           <span>Remember me</span>
         </label>
 
@@ -77,9 +108,19 @@ function cargoSubmit() {
         <a href="#" class="contact-us">Contact Us</a>
       </div>
     </form>
+    <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-else>
+      <h2>Welcome back</h2>
+      <p class="subtitle">AKOUDAD Abdessamad</p>
+
+      <img src="../assets/man.png" alt="perso-photo" />
+
+      <span>Your Email: {{ emailField }}</span>
+      <hr />
+
+      <button type="submit" @click="cargoSubmit()">Log Out</button>
+    </form>
   </div>
 </template>
-
 
 <style scoped>
 * {
@@ -100,7 +141,9 @@ function cargoSubmit() {
   width: 100%;
   max-width: 400px;
   gap: 12px;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Cleaner modern shadow profile */
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Cleaner modern shadow profile */
   padding: 40px;
   background-color: white;
   border-radius: 12px;
@@ -141,6 +184,11 @@ label {
   border-radius: 6px;
   outline: none;
   width: 100%;
+}
+
+img {
+  width: 250px;
+  align-self: center;
 }
 
 .email::placeholder {
@@ -205,7 +253,8 @@ label {
   margin: 0;
 }
 
-.forgot-password, .contact-us {
+.forgot-password,
+.contact-us {
   font-size: 0.875rem;
   color: #2563eb;
   text-decoration: none;
@@ -214,7 +263,8 @@ label {
   white-space: nowrap; /* FIX: Keeps link text unified */
 }
 
-.forgot-password:hover, .contact-us:hover {
+.forgot-password:hover,
+.contact-us:hover {
   color: #1d4ed8;
   text-decoration: underline;
 }
