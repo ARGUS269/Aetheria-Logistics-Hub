@@ -32,10 +32,13 @@ const isClicked = ref(false);
     </nav>
 
     <div class="app-main-container">
-
-
       <main class="app-viewport">
-        <RouterView />
+        <RouterView v-slot="{ Component }">
+          <!-- KeepAlive freezes the component state so it stays alive when navigating away -->
+          <KeepAlive :max="5">
+            <component :is="Component" />
+          </KeepAlive>
+        </RouterView>
       </main>
     </div>
   </div>
@@ -120,10 +123,6 @@ const isClicked = ref(false);
   height: 100%;
   overflow: hidden;
 }
-
-
-
-
 
 .app-viewport {
   flex-grow: 1;

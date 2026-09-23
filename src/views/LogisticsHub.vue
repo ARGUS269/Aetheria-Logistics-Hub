@@ -7,7 +7,7 @@ const isClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
 const isLogin = ref(false);
-const loginObject = ref({});
+const loginObject = ref(null);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
 const cargoManifest = ref([
@@ -49,16 +49,35 @@ function submitClicked(val) {
 }
 
 function LoginClicked(val) {
-  isLogin.value = val.isLogin;
-  console.log(val);
+  if (!val) return;
 
-  loginObject.value = val;
+  try {
+    loginObject.value = val;
+    isLogin.value = val.isLogin !== undefined ? val.isLogin : false;
+  } catch (error) {
+    console.error("Crash inside LoginClicked logic handler:", error);
+  }
 }
 
 function clicked() {
+  isClicked.value = false;
   LoginisClicked.value = false;
+  TransIsRotated.value = false;
+}
+
+function chevronClicked() {
+  isClicked.value = false;
+  LoginisClicked.value = false;
+}
+
+function loginClicked() {
   isClicked.value = false;
   TransIsRotated.value = false;
+}
+
+function cargoClicked() {
+  TransIsRotated.value = false;
+  LoginisClicked.value = false;
 }
 
 function chevron() {
@@ -68,27 +87,40 @@ function chevron() {
 
 <template>
   <header class="navbar-top" @click="clicked">
-    <div class="custom-select" v-if="isLogin" @click.stop>
+    <div class="custom-select" v-if="isLogin && loginObject" @click.stop="if(TransIsRotated) chevronClicked();">
       <div class="select-trigger" @click="chevron">
-        <span>{{ loginObject.fullName }}</span>
+        <span>{{ loginObject?.fullName }}</span>
         <div>
           <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
         </div>
       </div>
       <Transition name="shrink-square">
         <ul class="select-options" v-if="TransIsRotated">
-          <li class="first-li" @click="chevron">{{loginObject.fullName}}</li>
+          <li class="first-li" @click="chevron">{{ loginObject?.fullName }}</li>
         </ul>
       </Transition>
     </div>
     <div class="notifications"><i class="fa-regular fa-bell"></i></div>
     <div class="messages"><i class="fa-regular fa-message"></i></div>
-    <div class="login" @click="LoginisClicked = !LoginisClicked" @click.stop>
+    <div
+      class="login"
+      @click.stop="
+        LoginisClicked = !LoginisClicked;
+        if (LoginisClicked) loginClicked();
+      "
+    >
       <i class="fa-regular fa-user"></i>
     </div>
   </header>
-  <div class="dashboard-items" @click="clicked">
-    <button @click="isClicked = !isClicked" @click.stop>Click Me</button>
+  <div class="dashboard-items" @click="clicked()">
+    <button
+      @click.stop="
+        isClicked = !isClicked;
+        if (isClicked) cargoClicked();
+      "
+    >
+      Click Me
+    </button>
     <AnalyticsBanner
       :cargoManifest="cargoManifest"
       :totals="{ previousVolValue: totalVol, previousMassValue: totalMass }"
@@ -101,7 +133,7 @@ function chevron() {
   </Transition>
 
   <Transition name="shrink-square-login">
-    <div class="dashboard-view-login" v-if="LoginisClicked" @click.stop>
+    <div class="dashboard-view-login" v-show="LoginisClicked" @click.stop>
       <LoginForm @login-infos="LoginClicked" />
     </div>
   </Transition>

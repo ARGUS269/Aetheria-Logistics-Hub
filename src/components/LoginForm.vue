@@ -8,7 +8,7 @@ const emailField = ref("");
 const passwordField = ref("");
 const isLogin = ref(false);
 
-const emit = defineEmits(["LoginClicked"]);
+const emit = defineEmits(["login-infos"]);
 
 function testEmailInput() {
   inputError.value = false;
@@ -101,14 +101,14 @@ function dispatchSignalLogOut() {
         <a href="#" class="forgot-password">Forgot password?</a>
       </div>
 
-      <button type="submit" @click="cargoSubmit()">Sign In</button>
+      <button type="submit">Sign In</button>
 
       <div class="form-actions-row-contact">
         <span>Don't have an account?</span>
         <a href="#" class="contact-us">Contact Us</a>
       </div>
     </form>
-    <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-else>
+    <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-if="isLogin">
       <h2>Welcome back</h2>
       <p class="subtitle">AKOUDAD Abdessamad</p>
 
@@ -117,7 +117,7 @@ function dispatchSignalLogOut() {
       <span>Your Email: {{ emailField }}</span>
       <hr />
 
-      <button type="submit" @click="cargoSubmit()">Log Out</button>
+      <button type="submit">Log Out</button>
     </form>
   </div>
 </template>
