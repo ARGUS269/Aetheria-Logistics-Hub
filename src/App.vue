@@ -5,6 +5,7 @@ const isClicked = ref(false);
 
 <template>
   <div class="app-layout">
+
     <nav class="navbar">
       <div class="top">
         <div class="nav-brand">AG</div>
@@ -31,25 +32,36 @@ const isClicked = ref(false);
       </div>
     </nav>
 
-    <main class="app-viewport">
-      <RouterView />
-    </main>
+    <div class="app-main-container">
+
+      <header class="navbar-top">
+        <div class="notifications"><i class="fa-regular fa-bell"></i></div>
+        <div class="messages"><i class="fa-regular fa-message"></i></div>
+        <div class="login"><i class="fa-regular fa-user"></i></div>
+      </header>
+
+      <main class="app-viewport">
+        <RouterView />
+      </main>
+    </div>
+
   </div>
 </template>
 
 <style>
-.app-layout {
-  display: flex;
-  min-height: 100vh;
-  overflow: hidden;
+* {
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
 }
 
-.top,
-.bottom {
-  margin: 20px 0;
+
+.app-layout {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .navbar {
@@ -58,21 +70,19 @@ const isClicked = ref(false);
   align-items: center;
   justify-content: space-between;
   background-color: #ffffff;
-  padding: 8px 6px;
-  gap: 20px;
+  padding: 20px 0;
   box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.05);
   border-right: 1px solid #e2e8f0;
-  height: 100vh;
-  width: 50px;
+  height: 100%;
+  width: 64px;
   flex-shrink: 0;
-
-  position: relative;
   z-index: 50;
 }
-.app-viewport {
-  flex-grow: 1;
-  height: 100vh;
-  overflow-y: auto;
+.top, .bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
 }
 
 .nav-brand {
@@ -80,17 +90,14 @@ const isClicked = ref(false);
   font-weight: 800;
   color: #4b5563;
   letter-spacing: -0.5px;
-  margin-bottom: 10px;
-}
-
-i {
-  color: #4b5563;
+  margin-bottom: 24px;
 }
 
 .nav-links {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  gap: 16px;
   width: 100%;
 }
 
@@ -100,18 +107,53 @@ i {
   align-items: center;
   text-decoration: none;
   font-size: 1.25rem;
-  padding: 12px;
+  width: 44px;
+  height: 44px;
   color: #333;
   border-radius: 6px;
   transition: all 0.2s ease;
   cursor: pointer;
 }
 
-* {
-  user-select: none;
-}
-
 .hover {
   background-color: #f1f5f9;
+}
+
+.app-main-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: calc(100% - 64px);
+  height: 100%;
+  overflow: hidden;
+}
+
+.navbar-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 24px;
+  gap: 24px;
+  width: 100%;
+  height: 56px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  flex-shrink: 0;
+}
+
+.navbar-top div {
+  cursor: pointer;
+  font-size: 1.15rem;
+}
+
+.app-viewport {
+  flex-grow: 1;
+  height: calc(100% - 56px);
+  overflow-y: auto;
+}
+
+i {
+  color: #4b5563;
 }
 </style>

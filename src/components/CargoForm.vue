@@ -72,109 +72,115 @@ function testInput() {
 </script>
 
 <template>
-  <form @submit.prevent="dispatchSignal" class="form-container">
-    <label for="destinationField">Destination City: </label>
-    <input
-      name="destinationField"
-      id="destinationField"
-      type="text"
-      class="destination-field"
-      placeholder="e.g., Tokyo (NRT)..."
-      v-model="destinationCity"
-      @input="testInput"
-    />
-    <label for="destinationField" :class="{ errorHundle: inputError }"
-      >Cargo categorization:
-    </label>
-    <div class="custom-select">
-      <div class="select-trigger" @click="chevron">
-        <span>{{ categorization }}</span>
-        <div>
-          <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+  <div class="cargo-page-wrapper">
+    <form @submit.prevent="dispatchSignal" class="form-container">
+      <label for="destinationField">Destination City: </label>
+      <input
+        name="destinationField"
+        id="destinationField"
+        type="text"
+        class="destination-field"
+        placeholder="e.g., Tokyo (NRT)..."
+        v-model="destinationCity"
+        @input="testInput"
+      />
+      <label for="destinationField" :class="{ errorHundle: inputError }"
+        >Cargo categorization:
+      </label>
+      <div class="custom-select">
+        <div class="select-trigger" @click="chevron">
+          <span>{{ categorization }}</span>
+          <div>
+            <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+          </div>
         </div>
+        <Transition name="shrink-square">
+          <ul class="select-options" v-if="TransIsRotated">
+            <li class="first-li" @click="selectOption('Electronics')">Electronics</li>
+            <li @click="selectOption('Medical Supplies')">Medical Supplies</li>
+            <li @click="selectOption('Perishables')">Perishables</li>
+          </ul>
+        </Transition>
       </div>
-      <Transition name="shrink-square">
-        <ul class="select-options" v-if="TransIsRotated">
-          <li class="first-li" @click="selectOption('Electronics')">Electronics</li>
-          <li @click="selectOption('Medical Supplies')">Medical Supplies</li>
-          <li @click="selectOption('Perishables')">Perishables</li>
-        </ul>
-      </Transition>
-    </div>
-    <div class="mass-slider-card">
-      <label for="scale-slider" class="scale-slider-label" :data-text="massValue"
-        >Cargo Mass Scale:</label
-      >
-      <div class="slider-wrapper">
-        <input
-          type="range"
-          id="scale-slider"
-          min="10"
-          max="2000"
-          step="10"
-          list="scale-markers"
-          v-model="massValue"
-          class="slider-wrapper-mass"
-        />
+      <div class="mass-slider-card">
+        <label for="scale-slider" class="scale-slider-label" :data-text="massValue"
+          >Cargo Mass Scale:</label
+        >
+        <div class="slider-wrapper">
+          <input
+            type="range"
+            id="scale-slider"
+            min="10"
+            max="2000"
+            step="10"
+            list="scale-markers"
+            v-model="massValue"
+            class="slider-wrapper-mass"
+          />
 
-        <div class="scale-ticks">
-          <span>10kg</span>
-          <span>500kg</span>
-          <span>1000kg</span>
-          <span>1500kg</span>
-          <span>2000kg</span>
+          <div class="scale-ticks">
+            <span>10kg</span>
+            <span>500kg</span>
+            <span>1000kg</span>
+            <span>1500kg</span>
+            <span>2000kg</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="val-slider-card">
-      <label for="scale-slider" class="scale-slider-label" :data-text="valValue"
-        >Financial Val Scale:</label
-      >
-      <div class="slider-wrapper">
-        <input
-          type="range"
-          id="scale-slider"
-          min="500"
-          max="50000"
-          step="10"
-          list="scale-markers"
-          v-model="valValue"
-          class="slider-wrapper-val"
-        />
+      <div class="val-slider-card">
+        <label for="scale-slider" class="scale-slider-label" :data-text="valValue"
+          >Financial Val Scale:</label
+        >
+        <div class="slider-wrapper">
+          <input
+            type="range"
+            id="scale-slider"
+            min="500"
+            max="50000"
+            step="10"
+            list="scale-markers"
+            v-model="valValue"
+            class="slider-wrapper-val"
+          />
 
-        <div class="scale-ticks">
-          <span>$500</span>
-          <span>$1000</span>
-          <span>$5000</span>
-          <span>$10000</span>
-          <span>$50000</span>
+          <div class="scale-ticks">
+            <span>$500</span>
+            <span>$1000</span>
+            <span>$5000</span>
+            <span>$10000</span>
+            <span>$50000</span>
+          </div>
         </div>
       </div>
-    </div>
-    <button
-      type="submit"
-      @click="cargoSubmit()"
-      :disabled="isLaunched"
-      :class="{ launchClass: isLaunched }"
-    >
-      {{ launch }}
-    </button>
-  </form>
+      <button
+        type="submit"
+        @click="cargoSubmit()"
+        :disabled="isLaunched"
+        :class="{ launchClass: isLaunched }"
+      >
+        {{ launch }}
+      </button>
+    </form>
+  </div>
 </template>
 
 <style scoped>
 * {
   user-select: none;
+  box-sizing: border-box;
 }
 
 button {
   width: 100%;
   align-self: center;
-  padding: 7px;
   cursor: pointer;
   border: 0;
   border-radius: 6px;
   background-color: #e5e7eb;
+  font-weight: 600;
+  padding: 12px;
+  width: 280px;
+  font-size: 0.95rem;
 }
 
 .errorHundle {
@@ -212,6 +218,15 @@ button:hover {
   position: relative;
   overflow: hidden;
   background-color: #e5e7eb;
+}
+
+.cargo-page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: calc(100vh - 56px); /* Fills screen height space cleanly below header top bar */
+  padding: 20px;
 }
 
 .launchClass::before {
@@ -370,12 +385,15 @@ input[type="range"]::-webkit-slider-thumb:hover {
 .form-container {
   display: flex;
   flex-direction: column;
-  width: 300px;
-  gap: 10px;
-
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
-  padding: 30px;
+  width: 100%;
+  max-width: 400px;
+  gap: 12px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Cleaner modern shadow profile */
+  padding: 40px;
   background-color: white;
+  border-radius: 12px;
 }
 
 .custom-select {
