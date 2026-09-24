@@ -1,5 +1,36 @@
 <script setup>
 import { ref } from "vue";
+
+const cargoManifest = ref([
+  {
+    id: "TRK-1002",
+    destination: "Tokyo (NRT)",
+    cargoType: "Electronics",
+    weight: 450,
+    value: 12000,
+    status: "IN_TRANSIT",
+    transitProgress: 45,
+  },
+  {
+    id: "TRK-5541",
+    destination: "London (LHR)",
+    cargoType: "Medical Supplies",
+    weight: 120,
+    value: 25000,
+    status: "HELD_IN_CUSTOMS",
+    transitProgress: 20,
+  },
+]);
+
+const loginObject = ref(null);
+
+function SubmitClickedToParent(payload) {
+  cargoManifest.value.push(payload);
+}
+
+function LoginClickedToParent(payload) {
+  loginObject.value = payload;
+}
 const isClicked = ref(false);
 </script>
 
@@ -34,10 +65,13 @@ const isClicked = ref(false);
     <div class="app-main-container">
       <main class="app-viewport">
         <RouterView v-slot="{ Component }">
-          <!-- KeepAlive freezes the component state so it stays alive when navigating away -->
-          <KeepAlive :max="5">
-            <component :is="Component" />
-          </KeepAlive>
+          <component
+            :is="Component"
+            :cargoManifest="cargoManifest"
+            :loginObject="loginObject"
+            @add-cargo="SubmitClickedToParent"
+            @add-infos="LoginClickedToParent"
+          />
         </RouterView>
       </main>
     </div>

@@ -3,60 +3,34 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 import CargoForm from "@/components/CargoForm.vue";
 import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 import LoginForm from "@/components/LoginForm.vue";
+import ShipmentNetworkMap from "@/components/ShipmentNetworkMap.vue";
 const isClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
-const isLogin = ref(false);
-const loginObject = ref(null);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
+const props = defineProps({
+  cargoManifest: {
+    type: Object,
+    required: true,
+  },
+  loginObject: {
+    type: [Object, null],
+    required: true,
+  },
+});
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
-const cargoManifest = ref([
-  {
-    id: "TRK-1002",
-    destination: "Tokyo (NRT)",
-    cargoType: "Electronics",
-    weight: 450,
-    value: 12000,
-    status: "IN_TRANSIT",
-    transitProgress: 45,
-  },
-  {
-    id: "TRK-5541",
-    destination: "London (LHR)",
-    cargoType: "Medical Supplies",
-    weight: 120,
-    value: 25000,
-    status: "HELD_IN_CUSTOMS",
-    transitProgress: 20,
-  },
-]);
 
-const totalVol = computed(() => {
-  return cargoManifest.value.reduce((accumulator, item) => {
-    return accumulator + parseInt(item.value);
-  }, 0);
-});
-
-const totalMass = computed(() => {
-  return cargoManifest.value.reduce((accumulator, item) => {
-    return accumulator + parseInt(item.weight);
-  }, 0);
-});
+const emit = defineEmits(["add-cargo", "add-infos"]);
 
 function submitClicked(val) {
   isClicked.value = false;
-  cargoManifest.value.push(val);
+  emit("add-cargo", val);
 }
 
 function LoginClicked(val) {
   if (!val) return;
 
-  try {
-    loginObject.value = val;
-    isLogin.value = val.isLogin !== undefined ? val.isLogin : false;
-  } catch (error) {
-    console.error("Crash inside LoginClicked logic handler:", error);
-  }
+  emit("add-infos", val);
 }
 
 function clicked() {
@@ -70,7 +44,7 @@ function chevronClicked() {
   LoginisClicked.value = false;
 }
 
-function loginClicked() {
+function loginisClicked() {
   isClicked.value = false;
   TransIsRotated.value = false;
 }
@@ -87,7 +61,11 @@ function chevron() {
 
 <template>
   <header class="navbar-top" @click="clicked">
-    <div class="custom-select" v-if="isLogin && loginObject" @click.stop="if(TransIsRotated) chevronClicked();">
+    <div
+      class="custom-select"
+      v-if="loginObject?.isLogin && loginObject"
+      @click.stop="if (TransIsRotated) chevronClicked();"
+    >
       <div class="select-trigger" @click="chevron">
         <span>{{ loginObject?.fullName }}</span>
         <div>
@@ -106,7 +84,7 @@ function chevron() {
       class="login"
       @click.stop="
         LoginisClicked = !LoginisClicked;
-        if (LoginisClicked) loginClicked();
+        if (LoginisClicked) loginisClicked();
       "
     >
       <i class="fa-regular fa-user"></i>
@@ -121,14 +99,12 @@ function chevron() {
     >
       Click Me
     </button>
-    <AnalyticsBanner
-      :cargoManifest="cargoManifest"
-      :totals="{ previousVolValue: totalVol, previousMassValue: totalMass }"
-    />
+    <AnalyticsBanner :cargoManifest="cargoManifest" />
+    <ShipmentNetworkMap />
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked" :cargoManifest="cargoManifest" />
+      <CargoForm @submit-clicked="submitClicked" />
     </div>
   </Transition>
 
@@ -242,10 +218,13 @@ i {
   z-index: 10;
 }
 
+span,
 .select-options li {
   color: #333333;
-
-  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: bold;
+  padding: 5px 7px;
+  text-align: center;
 }
 
 .select-options li:hover {
@@ -272,7 +251,7 @@ i {
 
   color: #333333;
 
-  padding: 10px 14px;
+  padding: 5px 7px;
   border: 1px solid #cccccc;
   border-radius: 6px;
   gap: 10px;

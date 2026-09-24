@@ -1,5 +1,16 @@
 <script setup>
 import { ref } from "vue";
+const props = defineProps({
+  cargoManifest: {
+    type: Object,
+    required: true,
+  },
+  loginObject: {
+    type: [Object, null],
+    required: true,
+  },
+});
+const emit = defineEmits(["add-cargo", "add-infos"]);
 </script>
 
 <template>
