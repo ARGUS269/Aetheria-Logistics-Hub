@@ -9,7 +9,12 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
       <i class="fa-solid fa-arrow-up"></i>
     </div>
     <div class="dashboard-grid">
-      <div class="square" v-for="value in 40" :key="value"></div>
+      <div class="square" v-for="value in 48" :key="value"></div>
+      <div class="keys">
+        <div class="green"></div>
+        <div class="orange"></div>
+        <div class="red"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -26,7 +31,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
     0 1px 2px -1px rgba(0, 0, 0, 0.05);
   gap: 20px;
 }
-.fa-arrow-up{
+.fa-arrow-up {
   transform: rotate(45deg);
   cursor: pointer;
 }
@@ -40,6 +45,59 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
   grid-template-columns: repeat(8, 1fr);
   background-color: #eeeeee;
   gap: 3px;
+  position: relative;
+}
+
+.keys {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  left: 20px;
+  transform: translateX(-50%);
+  bottom: 0;
+  gap: 12px;
+}
+
+.keys div {
+  width: 3px;
+  height: 20px;
+  border-radius: 12px;
+  position: relative;
+}
+.keys div::after {
+  position: absolute;
+  color: #979798;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 24px;
+  height: 24px;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.green {
+  background-color: #61d733;
+}
+
+.green::after {
+  content: "On Schedule";
+}
+
+.red {
+  background-color: #b83f4d;
+}
+
+.red::after {
+  content: "Issue Detected";
+}
+
+.orange {
+  background-color: #fec38e;
+}
+
+.orange::after {
+  content: "Delayed";
 }
 
 .square {

@@ -4,6 +4,7 @@ import CargoForm from "@/components/CargoForm.vue";
 import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 import LoginForm from "@/components/LoginForm.vue";
 import ShipmentNetworkMap from "@/components/ShipmentNetworkMap.vue";
+import ShipmentInformation from "@/components/ShipmentInformation.vue";
 const isClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
@@ -100,7 +101,7 @@ function chevron() {
       Click Me
     </button>
     <AnalyticsBanner :cargoManifest="cargoManifest" />
-    <ShipmentNetworkMap />
+    <ShipmentInformation />
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
