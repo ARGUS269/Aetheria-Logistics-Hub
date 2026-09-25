@@ -92,16 +92,17 @@ function chevron() {
     </div>
   </header>
   <div class="dashboard-items" @click="clicked()">
-    <button
+    <!--<button
       @click.stop="
         isClicked = !isClicked;
         if (isClicked) cargoClicked();
       "
     >
       Click Me
-    </button>
-    <AnalyticsBanner :cargoManifest="cargoManifest" />
-    <ShipmentInformation />
+    </button>-->
+    <ShipmentInformation class="info-area" />
+    <ShipmentNetworkMap class="map-area" />
+    <AnalyticsBanner :cargoManifest="cargoManifest" class="banner-area-cargo-truck" />
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
@@ -132,7 +133,30 @@ i {
   width: 100vw;
   min-height: 100vh;
   position: fixed;
+  background-color: #f8f9f9;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  gap: 24px;
+  grid-template-areas:
+    "info  banner"
+    "map    banner";
 }
+.banner-area-cargo-truck {
+  grid-area: banner;
+  height: fit-content;
+}
+
+.info-area {
+  grid-area: info;
+  height: fit-content;
+}
+
+.map-area {
+  grid-area: map;
+  height: fit-content;
+}
+
 .dashboard-view {
   position: absolute;
   top: 50%;

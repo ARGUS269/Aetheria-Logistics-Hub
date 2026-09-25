@@ -135,7 +135,6 @@ watch(
   align-items: center;
   gap: 48px;
   padding: 16px;
-  background-color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 

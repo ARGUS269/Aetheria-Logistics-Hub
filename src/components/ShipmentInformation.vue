@@ -45,6 +45,7 @@ const departed = ref("09:15 AM");
           <div class="source">{{ source }}</div>
           <div class="label">Origin</div>
         </div>
+        <div class="ico"><i class="fa-solid fa-truck-arrow-right"></i></div>
         <div class="path"></div>
         <div class="destination">
           <div class="dest">{{ destination }}</div>
@@ -55,7 +56,81 @@ const departed = ref("09:15 AM");
   </div>
 </template>
 
-<style scoped>
+<style>
+* {
+  font-family:
+    "Inter",
+    "Roboto",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.shipment-path,
+.shipment-infos {
+  text-align: center;
+}
+.ico {
+  padding: 10px;
+  width: 40px;
+  height: 40px;
+  background-color: #4b5563;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ico::after {
+  content: "-----";
+  display: flex;
+  color: #eeeeee;
+  position: absolute;
+  width: 100px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  right: 5px;
+}
+.ico::before {
+  content: "-----";
+  display: flex;
+  color: #eeeeee;
+  position: absolute;
+  width: 100px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  left: 40px;
+}
+.shipment-infos {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+.fa-truck-arrow-right {
+  color: white;
+}
+.label {
+  width: 90px;
+}
+.shipment-path {
+  justify-content: space-between;
+  display: flex;
+  position: relative;
+  padding: 50px 0;
+  gap: 30px;
+}
+.ttl,
+.label {
+  color: #8a8a8a;
+}
 .body {
   display: flex;
   flex-direction: column;
@@ -66,6 +141,7 @@ const departed = ref("09:15 AM");
     0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 1px 2px -1px rgba(0, 0, 0, 0.05);
   gap: 20px;
+  background-color: white;
 }
 
 .title {
@@ -80,6 +156,10 @@ const departed = ref("09:15 AM");
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+.names div {
+  text-align: start;
 }
 
 .contact-infos {
