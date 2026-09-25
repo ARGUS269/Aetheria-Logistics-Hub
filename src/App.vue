@@ -22,7 +22,13 @@ const cargoManifest = ref([
   },
 ]);
 
+const userGreetingValue = ref([]);
+
 const loginObject = ref(null);
+
+function NewMessage(payload) {
+  userGreetingValue.value.push(payload);
+}
 
 function SubmitClickedToParent(payload) {
   cargoManifest.value.push(payload);
@@ -69,8 +75,10 @@ const isClicked = ref(false);
             :is="Component"
             :cargoManifest="cargoManifest"
             :loginObject="loginObject"
+            :messages="userGreetingValue"
             @add-cargo="SubmitClickedToParent"
             @add-infos="LoginClickedToParent"
+            @messages="NewMessage"
           />
         </RouterView>
       </main>

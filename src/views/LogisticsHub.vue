@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, watch, onMounted, onUnmounted } from "vue";
 import CargoForm from "@/components/CargoForm.vue";
 import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 import LoginForm from "@/components/LoginForm.vue";
@@ -11,7 +11,6 @@ const NotificationsisClicked = ref(false);
 const MessageisClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
-const userGreetingValue = ref("");
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
   cargoManifest: {
@@ -22,16 +21,33 @@ const props = defineProps({
     type: [Object, null],
     required: true,
   },
+  messages: {
+    type: Array,
+    required: true,
+  },
 });
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
-let workerInterval = null;
+let workerTimeout = null;
 onMounted(() => {
-  workerInterval = setInterval(async () => {
-    userGreetingValue.value="Welcome Back AKOUDAD Abdessamad"
-    clearInterval(workerInterval);
-  }, 3000);
+  if (props.loginObject?.isLogin && props.messages.length===0) {
+    triggerWelcomeBanner();
+  }
 });
-const emit = defineEmits(["add-cargo", "add-infos"]);
+
+watch(
+  () => props.loginObject?.isLogin,
+  (newIsLogin) => {
+    if (newIsLogin) {
+      triggerWelcomeBanner();
+    }
+  },
+);
+
+onUnmounted(() => {
+  if (workerTimeout) clearTimeout(workerTimeout);
+});
+
+const emit = defineEmits(["add-cargo", "add-infos", "messages"]);
 
 function submitClicked(val) {
   isClicked.value = false;
@@ -42,6 +58,18 @@ function LoginClicked(val) {
   if (!val) return;
 
   emit("add-infos", val);
+}
+
+function saveMessages(val) {
+  emit("messages", val);
+}
+
+function triggerWelcomeBanner() {
+  if (workerTimeout) clearTimeout(workerTimeout);
+
+  workerTimeout = setTimeout(() => {
+    saveMessages("Welcome Back AKOUDAD Abdessamad");
+  }, 3000);
 }
 
 function clicked() {
@@ -119,7 +147,7 @@ function chevron() {
         MessageisClicked = !MessageisClicked;
         if (MessageisClicked) messageisClicked();
       "
-       :class="{not: userGreetingValue}"
+      :class="{ not: messages.length && loginObject?.isLogin }"
     >
       <i class="fa-regular fa-message"></i>
     </div>
@@ -160,12 +188,20 @@ function chevron() {
   </Transition>
   <Transition name="shrink-square-login">
     <div class="dashboard-view-login" v-show="NotificationsisClicked" @click.stop>
-      <MessageComponent :message="{ value: 'Notifications' }" :messageValue="userGreetingValue"/>
+      <MessageComponent
+        :message="{ value: 'Notifications' }"
+        :messageValue="messages"
+        :isLogin="{ value: loginObject?.isLogin }"
+      />
     </div>
   </Transition>
   <Transition name="shrink-square-login">
     <div class="dashboard-view-login" v-show="MessageisClicked" @click.stop>
-      <MessageComponent :message="{ value: 'Messages' }" :messageValue="userGreetingValue" />
+      <MessageComponent
+        :message="{ value: 'Messages' }"
+        :messageValue="messages"
+        :isLogin="{ value: loginObject?.isLogin }"
+      />
     </div>
   </Transition>
 </template>
@@ -181,11 +217,11 @@ i {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-.messages{
+.messages {
   position: relative;
 }
 
-.not::before{
+.not::before {
   content: "";
   position: absolute;
   background-color: red;
