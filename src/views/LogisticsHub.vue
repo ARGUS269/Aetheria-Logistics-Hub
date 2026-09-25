@@ -5,9 +5,13 @@ import AnalyticsBanner from "@/components/AnalyticsBanner.vue";
 import LoginForm from "@/components/LoginForm.vue";
 import ShipmentNetworkMap from "@/components/ShipmentNetworkMap.vue";
 import ShipmentInformation from "@/components/ShipmentInformation.vue";
+import MessageComponent from "@/components/MessageComponent.vue";
 const isClicked = ref(false);
+const NotificationsisClicked = ref(false);
+const MessageisClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
+const userGreetingValue = ref("");
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
   cargoManifest: {
@@ -20,7 +24,13 @@ const props = defineProps({
   },
 });
 // The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
-
+let workerInterval = null;
+onMounted(() => {
+  workerInterval = setInterval(async () => {
+    userGreetingValue.value="Welcome Back AKOUDAD Abdessamad"
+    clearInterval(workerInterval);
+  }, 3000);
+});
 const emit = defineEmits(["add-cargo", "add-infos"]);
 
 function submitClicked(val) {
@@ -38,21 +48,36 @@ function clicked() {
   isClicked.value = false;
   LoginisClicked.value = false;
   TransIsRotated.value = false;
+  NotificationsisClicked.value = false;
+  MessageisClicked.value = false;
 }
 
 function chevronClicked() {
   isClicked.value = false;
   LoginisClicked.value = false;
+  NotificationsisClicked.value = false;
+  MessageisClicked.value = false;
 }
 
 function loginisClicked() {
   isClicked.value = false;
   TransIsRotated.value = false;
+  NotificationsisClicked.value = false;
+  MessageisClicked.value = false;
 }
 
-function cargoClicked() {
+function notificationsisClicked() {
+  isClicked.value = false;
   TransIsRotated.value = false;
   LoginisClicked.value = false;
+  MessageisClicked.value = false;
+}
+
+function messageisClicked() {
+  isClicked.value = false;
+  TransIsRotated.value = false;
+  LoginisClicked.value = false;
+  NotificationsisClicked.value = false;
 }
 
 function chevron() {
@@ -79,8 +104,25 @@ function chevron() {
         </ul>
       </Transition>
     </div>
-    <div class="notifications"><i class="fa-regular fa-bell"></i></div>
-    <div class="messages"><i class="fa-regular fa-message"></i></div>
+    <div
+      class="notifications"
+      @click.stop="
+        NotificationsisClicked = !NotificationsisClicked;
+        if (NotificationsisClicked) notificationsisClicked();
+      "
+    >
+      <i class="fa-regular fa-bell"></i>
+    </div>
+    <div
+      class="messages"
+      @click.stop="
+        MessageisClicked = !MessageisClicked;
+        if (MessageisClicked) messageisClicked();
+      "
+       :class="{not: userGreetingValue}"
+    >
+      <i class="fa-regular fa-message"></i>
+    </div>
     <div
       class="login"
       @click.stop="
@@ -116,6 +158,16 @@ function chevron() {
       <LoginForm @login-infos="LoginClicked" />
     </div>
   </Transition>
+  <Transition name="shrink-square-login">
+    <div class="dashboard-view-login" v-show="NotificationsisClicked" @click.stop>
+      <MessageComponent :message="{ value: 'Notifications' }" :messageValue="userGreetingValue"/>
+    </div>
+  </Transition>
+  <Transition name="shrink-square-login">
+    <div class="dashboard-view-login" v-show="MessageisClicked" @click.stop>
+      <MessageComponent :message="{ value: 'Messages' }" :messageValue="userGreetingValue" />
+    </div>
+  </Transition>
 </template>
 
 <style scoped>
@@ -128,6 +180,21 @@ i {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+.messages{
+  position: relative;
+}
+
+.not::before{
+  content: "";
+  position: absolute;
+  background-color: red;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  top: 0;
+  left: -50%;
+  transform: translateX(50%);
 }
 
 .dashboard-items {
@@ -155,6 +222,7 @@ i {
 .info-area {
   grid-area: info;
   height: fit-content;
+  margin-top: 68px;
 }
 
 .map-area {

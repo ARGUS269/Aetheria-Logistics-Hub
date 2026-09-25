@@ -122,10 +122,10 @@ function dispatchSignalLogOut() {
   </div>
 </template>
 
-<style scoped>
+<style>
 * {
   user-select: none;
-  box-sizing: border-box; /* Crucial padding fallback fix */
+  box-sizing: border-box;
 }
 
 .login-page-wrapper {
