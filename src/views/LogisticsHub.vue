@@ -102,7 +102,8 @@ function chevron() {
     </button>-->
     <ShipmentInformation class="info-area" />
     <ShipmentNetworkMap class="map-area" />
-    <AnalyticsBanner :cargoManifest="cargoManifest" class="banner-area-cargo-truck" />
+    <AnalyticsBanner :cargoManifest="cargoManifest" class="banner-area" />
+    <div class="cargo-truck"></div>
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
@@ -135,16 +136,20 @@ i {
   position: fixed;
   background-color: #f8f9f9;
   display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: auto;
+  grid-template-columns: 1fr 4fr;
   gap: 24px;
   grid-template-areas:
     "info  banner"
-    "map    banner";
+    "map    truck";
 }
-.banner-area-cargo-truck {
+.banner-area {
   grid-area: banner;
   height: fit-content;
+  align-self: self-start;
+}
+
+.cargo-truck {
+  grid-area: truck;
 }
 
 .info-area {

@@ -15,7 +15,7 @@ const departed = ref("09:15 AM");
     <div class="dashboard-infos">
       <div class="contact-information custom-dash-bottom">
         <div class="contact-infos">
-          <img src="../assets/operator.png" alt="" />
+          <img src="../assets/operator.png" alt="" class="operator-img" />
           <div class="names">
             <div class="title">Operator</div>
             <div class="operator-name">Amrou Altanji</div>
@@ -67,6 +67,7 @@ const departed = ref("09:15 AM");
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  box-sizing: border-box;
 }
 .shipment-path,
 .shipment-infos {
@@ -85,30 +86,14 @@ const departed = ref("09:15 AM");
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  z-index: 99;
+}
+.ico :deep(i),
+.ico :deep(svg) {
+  color: #ffffff !important;
+  font-size: 0.9rem;
 }
 
-.ico::after {
-  content: "-----";
-  display: flex;
-  color: #eeeeee;
-  position: absolute;
-  width: 100px;
-  font-size: 30px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  right: 5px;
-}
-.ico::before {
-  content: "-----";
-  display: flex;
-  color: #eeeeee;
-  position: absolute;
-  width: 100px;
-  font-size: 30px;
-  font-weight: bold;
-  letter-spacing: 1px;
-  left: 40px;
-}
 .shipment-infos {
   display: flex;
   gap: 20px;
@@ -117,15 +102,54 @@ const departed = ref("09:15 AM");
 .fa-truck-arrow-right {
   color: white;
 }
+.source,
+.dest {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+.origin,
+.destination {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff; /* Blocks the dashed background line completely */
+  padding: 0 12px; /* Gives comfortable horizontal padding breathing space */
+  position: relative;
+  z-index: 10; /* Lifts full container block safely over the line */
+}
+
+.origin {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.destination {
+  align-items: flex-end;
+  text-align: right;
+}
+
 .label {
-  width: 90px;
+  font-size: 0.8rem;
+  width: auto !important;
+  margin-top: 2px;
 }
 .shipment-path {
-  justify-content: space-between;
   display: flex;
+  justify-content: space-between;
+  align-items: center; /* Crucial: aligns both city blocks and center circle node vertically */
   position: relative;
-  padding: 50px 0;
-  gap: 30px;
+  width: 100%;
+  padding: 24px 0;
+}
+.shipment-path::before {
+  content: "";
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 2px dashed #e2e8f0;
+  z-index: 1; /* Lowest index layers */
 }
 .ttl,
 .label {
@@ -186,7 +210,7 @@ const departed = ref("09:15 AM");
   display: flex;
   justify-content: start;
 }
-img {
+.operator-img {
   width: 60px;
   height: 60px;
 
@@ -219,9 +243,10 @@ img {
     color 0.2s ease;
 }
 
-.corps i {
-  font-size: 1.1rem;
-  color: #4b5563;
+.corps :deep(i),
+.corps :deep(svg) {
+  font-size: 1rem;
+  color: #64748b;
   transition: color 0.2s ease;
 }
 

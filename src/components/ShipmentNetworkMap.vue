@@ -24,7 +24,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
   display: flex;
   flex-direction: column;
   width: 380px;
-  padding: 30px;
+  padding: 30px 30px;
   border-radius: 16px;
   box-shadow:
     0 1px 3px 0 rgba(0, 0, 0, 0.05),
