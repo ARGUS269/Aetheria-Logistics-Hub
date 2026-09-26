@@ -36,11 +36,13 @@ provide(
 );
 
 function NewMessage(payload) {
-  userGreetingValue.value.push(payload);
+  if (!userGreetingValue.value.includes(payload)) userGreetingValue.value.push(payload);
 }
 
 function SubmitClickedToParent(payload) {
   cargoManifest.value.push(payload);
+  console.log(cargoManifest.value);
+
 }
 
 function LoginClickedToParent(payload) {
@@ -56,7 +58,7 @@ const isClicked = ref(false);
 </script>
 
 <template>
-  <div class="app-layout">
+  <div class="app-layout" :data-theme="btnisClicked ? 'dark' : 'light'">
     <nav class="navbar">
       <div class="top">
         <div class="nav-brand">AG</div>
@@ -123,10 +125,10 @@ const isClicked = ref(false);
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   padding: 20px 0;
-  box-shadow: 4px 0 6px -1px rgba(0, 0, 0, 0.05);
-  border-right: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  border-right: 1px solid var(--border-color);
   height: 100%;
   width: 64px;
   flex-shrink: 0;
@@ -143,7 +145,7 @@ const isClicked = ref(false);
 .nav-brand {
   font-size: 1.25rem;
   font-weight: 800;
-  color: #4b5563;
+  color: var(--text-muted);
   letter-spacing: -0.5px;
   margin-bottom: 24px;
 }
@@ -171,7 +173,7 @@ const isClicked = ref(false);
 }
 
 .hover {
-  background-color: #f1f5f9;
+  background-color: var(--bg-button-hover);
 }
 
 .app-main-container {
@@ -190,6 +192,6 @@ const isClicked = ref(false);
 }
 
 i {
-  color: #4b5563;
+  color: var(--icon-color);
 }
 </style>

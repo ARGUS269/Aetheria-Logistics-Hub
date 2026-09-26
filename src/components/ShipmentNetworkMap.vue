@@ -11,7 +11,7 @@ const props = defineProps({
 <template>
   <div class="body" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div class="head">
-      <h3>Shipment Network Map</h3>
+      <h3 class="txt">Shipment Network Map</h3>
       <i class="fa-solid fa-arrow-up"></i>
     </div>
     <div class="dashboard-grid">

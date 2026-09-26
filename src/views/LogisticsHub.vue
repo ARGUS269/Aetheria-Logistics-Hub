@@ -14,7 +14,7 @@ const TransIsRotated = ref(false);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
   cargoManifest: {
-    type: Object,
+    type: Array,
     required: true,
   },
   loginObject: {
@@ -97,6 +97,13 @@ function loginisClicked() {
   MessageisClicked.value = false;
 }
 
+function cargoClicked(){
+  TransIsRotated.value = false;
+  LoginisClicked.value = false;
+  MessageisClicked.value = false;
+  NotificationsisClicked.value = false;
+}
+
 function notificationsisClicked() {
   isClicked.value = false;
   TransIsRotated.value = false;
@@ -169,14 +176,6 @@ function chevron() {
     @click="clicked()"
     :data-theme="btnisClicked?.value ? 'dark' : 'light'"
   >
-    <!--<button
-      @click.stop="
-        isClicked = !isClicked;
-        if (isClicked) cargoClicked();
-      "
-    >
-      Click Me
-    </button>-->
     <ShipmentInformation class="info-area" :btnisClicked="{ value: btnisClicked.value }" />
     <ShipmentNetworkMap class="map-area" :btnisClicked="{ value: btnisClicked.value }" />
     <AnalyticsBanner
@@ -184,11 +183,20 @@ function chevron() {
       class="banner-area"
       :btnisClicked="{ value: btnisClicked.value }"
     />
-    <div class="cargo-truck"></div>
+    <div class="cargo-truck">
+      <button
+        @click.stop="
+          isClicked = !isClicked;
+          if (isClicked) cargoClicked();
+        "
+      >
+        Click Me
+      </button>
+    </div>
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked" :btnisClicked="{ value: btnisClicked.value }" />
+      <CargoForm @submit-clicked="submitClicked($event)" :cargoManifest="cargoManifest" :btnisClicked="{ value: btnisClicked.value }" />
     </div>
   </Transition>
 
@@ -257,6 +265,7 @@ i {
   grid-template-areas:
     "info  banner"
     "map    truck";
+  padding-left: 20px;
 }
 .banner-area {
   grid-area: banner;

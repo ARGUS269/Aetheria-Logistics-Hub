@@ -118,24 +118,17 @@ const props = defineProps({
 .destination {
   display: flex;
   flex-direction: column;
+  align-items: center;
+
   background-color: var(--bg-card);
   padding: 0 12px;
   position: relative;
   z-index: 10;
+  width: 88px;
 }
 
-.origin {
-  align-items: flex-start;
-  text-align: left;
-}
-
-.txt{
+.txt {
   color: var(--text-main);
-}
-
-.destination {
-  align-items: flex-end;
-  text-align: right;
 }
 
 .label {
@@ -146,7 +139,7 @@ const props = defineProps({
 .shipment-path {
   display: flex;
   justify-content: space-between;
-  align-items: center; /* Crucial: aligns both city blocks and center circle node vertically */
+  align-items: center;
   position: relative;
   width: 100%;
   padding: 24px 0;
@@ -159,7 +152,7 @@ const props = defineProps({
   top: 50%;
   transform: translateY(-50%);
   border-top: 2px dashed var(--bg-button-hover);
-  z-index: 1; /* Lowest index layers */
+  z-index: 1;
 }
 .ttl,
 .label {
@@ -231,7 +224,7 @@ const props = defineProps({
   border-radius: 50%;
 
   object-fit: cover;
-
+  background-color: #f8fafc;
   border: 2px solid var(--bg-button-hover);
 }
 

@@ -142,7 +142,6 @@ function dispatchSignalLogOut() {
 </template>
 
 <style scoped>
-/* Scoped locks your style definitions cleanly within this layout file context */
 * {
   user-select: none;
   box-sizing: border-box;
@@ -155,7 +154,6 @@ function dispatchSignalLogOut() {
   width: 100%;
 }
 
-/* FIX 1: Use var(--bg-card) so the card lifts off your page's main background */
 .form-container {
   display: flex;
   flex-direction: column;
@@ -197,13 +195,12 @@ label {
   letter-spacing: 0.05em;
 }
 
-/* FIX 2: Corrected the input text color and background parameters */
 .email {
   font-family: "Roboto", "Inter", sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-main);              /* Text stays visible */
-  background-color: var(--bg-main);     /* Input field remains legible */
+  color: var(--text-main);
+  background-color: var(--bg-main);
   padding: 10px 14px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -232,14 +229,13 @@ img {
   position: relative;
 }
 
-/* FIX 3: Corrected the password text color and background parameters */
 .pass .password {
   width: 100%;
   font-family: "Roboto", "Inter", sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--text-main);              /* Text stays visible */
-  background-color: var(--bg-main);     /* Input field remains legible */
+  color: var(--text-main);
+  background-color: var(--bg-main);
   padding: 10px 40px 10px 14px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
@@ -309,7 +305,6 @@ img {
   text-decoration: underline;
 }
 
-/* FIX 4: Aligned button background variables to standard action styles */
 button {
   width: 100%;
   padding: 12px;
@@ -352,7 +347,6 @@ hr {
   width: 100%;
 }
 
-/* Errors layout adjustments */
 .error {
   position: relative;
   padding-top: 10px;

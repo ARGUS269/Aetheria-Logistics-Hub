@@ -8,11 +8,15 @@ const valValue = ref(500);
 const launch = ref("Launch Cargo");
 const isLaunched = ref(false);
 const inputError = ref(false);
-const emit = defineEmits(["SubmitClicked"]);
+const emit = defineEmits(["submit-clicked"]);
 
 const props = defineProps({
   cargoManifest: {
     type: Array,
+    required: true,
+  },
+  btnisClicked: {
+    type: Object,
     required: true,
   },
 });
@@ -23,7 +27,7 @@ function chevron() {
 
 function isDuplicated(val) {
   //5004
-  props.cargoManifest.some((value) => {
+  props.cargoManifest?.some((value) => {
     if (val === value.id.slice(-4)) return isDuplicated(val + 1);
   });
   return val;
@@ -41,7 +45,7 @@ function cargoSubmit() {
     inputError.value = true;
     return;
   }
-  launch.value = "---------------------";
+  launch.value = "-------------------";
   isLaunched.value = true;
   const intervalID = setInterval(() => {
     emit("submit-clicked", {
@@ -72,7 +76,7 @@ function testInput() {
 </script>
 
 <template>
-  <div class="cargo-page-wrapper">
+  <div class="cargo-page-wrapper" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <form @submit.prevent="dispatchSignal" class="form-container">
       <label for="destinationField">Destination City: </label>
       <input
@@ -176,7 +180,7 @@ button {
   cursor: pointer;
   border: 0;
   border-radius: 6px;
-  background-color: #e5e7eb;
+  background-color: var(--bg-button);
   font-weight: 600;
   padding: 12px;
   width: 280px;
@@ -204,20 +208,18 @@ input[type="text"] {
 }
 
 button:hover {
-  background-color: #cccccc;
+  background-color: var(--bg-button-hover);
 }
 
+.launchClass,
 .launchClass:hover {
-  background-color: #e5e7eb;
-}
-
-.launchClass {
   font-weight: 700;
   font-size: 1rem;
   letter-spacing: 0.4em;
   position: relative;
   overflow: hidden;
-  background-color: #e5e7eb;
+  color: var(--text-main);
+  background-color: var(--bg-button);
 }
 
 .cargo-page-wrapper {
@@ -257,7 +259,7 @@ label {
   display: block;
   font-size: 14px;
   font-weight: 600;
-  color: #4b5563;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -274,8 +276,12 @@ input[type="range"] {
   appearance: none;
   height: 8px;
   border-radius: 9999px;
-  background: #e5e7eb;
+  background: var(--text-muted);
   outline: none;
+}
+
+.scale-ticks span {
+  color: var(--text-muted);
 }
 
 .scale-ticks span::before {
@@ -286,7 +292,7 @@ input[type="range"] {
   transform: translateX(-50%);
   width: 2px;
   height: 6px;
-  background-color: #d1d5db;
+  background-color: var(--text-muted);
 }
 .scale-slider-label {
   position: relative;
@@ -308,8 +314,8 @@ input[type="range"] {
   box-sizing: border-box;
   white-space: nowrap;
 
-  border: 1px solid #e5e7eb;
-  background-color: white;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-card);
   border-radius: 4px;
 
   transform: translateY(-50%);
@@ -325,7 +331,7 @@ input[type="range"]::-webkit-slider-thumb {
   background-position: center;
   background-size: 100%;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(var(--shadow-color), 0.1);
 }
 
 .slider-wrapper-mass::-webkit-slider-thumb {
@@ -358,27 +364,29 @@ input[type="range"]::-webkit-slider-thumb:hover {
   font-family: "Roboto", "Inter", sans-serif;
   font-size: 1rem;
   font-weight: 500;
-  color: #333333;
-
+  color: var(--text-main);
+  background-color: var(--bg-main);
   padding: 10px 14px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
   outline: none;
+  width: 100%;
+  transition: all 0.2s ease;
 }
 
 .destination-field::placeholder {
-  color: #888888;
+  color: var(--text-muted);
   font-weight: 400;
 }
 
 .select-options li {
-  color: #333333;
+  color: var(--text-main);
 
   padding: 10px 14px;
 }
 
 .select-options li:hover {
-  background-color: #cccccc;
+  background-color: var(--bg-button-hover);
 }
 
 .form-container {
@@ -388,10 +396,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
   max-width: 400px;
   gap: 12px;
   box-shadow:
-    0 10px 25px -5px rgba(0, 0, 0, 0.1),
-    0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Cleaner modern shadow profile */
+    0 10px 25px -5px rgba(var(--shadow-color), 0.1),
+    0 8px 10px -6px rgba(var(--shadow-color), 0.1);
   padding: 40px;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 12px;
 }
 
@@ -409,9 +417,9 @@ input[type="range"]::-webkit-slider-thumb:hover {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 6px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border-color);
   margin-top: 5px;
   transform-origin: center top;
   z-index: 10;
@@ -435,10 +443,10 @@ input[type="range"]::-webkit-slider-thumb:hover {
   justify-content: space-between;
   cursor: pointer;
 
-  color: #333333;
+  color: var(--text-main);
 
   padding: 10px 14px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
 }
 

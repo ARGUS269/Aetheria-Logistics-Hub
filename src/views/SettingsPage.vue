@@ -2,7 +2,7 @@
 import { ref } from "vue";
 const props = defineProps({
   cargoManifest: {
-    type: Object,
+    type: Array,
     required: true,
   },
   loginObject: {
