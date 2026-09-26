@@ -21,11 +21,19 @@ const cargoManifest = ref([
     transitProgress: 20,
   },
 ]);
+const btnisClicked = ref(false);
+
+function btnISClicked() {
+  btnisClicked.value = !btnisClicked.value;
+}
 
 const userGreetingValue = ref([]);
 
 const loginObject = ref(null);
-provide("globalUser", computed(() => loginObject.value));
+provide(
+  "globalUser",
+  computed(() => loginObject.value),
+);
 
 function NewMessage(payload) {
   userGreetingValue.value.push(payload);
@@ -83,9 +91,11 @@ const isClicked = ref(false);
             :cargoManifest="cargoManifest"
             :loginObject="loginObject"
             :messages="userGreetingValue"
+            :btnisClicked="{ value: btnisClicked }"
             @add-cargo="SubmitClickedToParent"
             @add-infos="LoginClickedToParent"
             @messages="NewMessage"
+            @btn-clicked="btnISClicked"
           />
         </RouterView>
       </main>

@@ -15,13 +15,17 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  btnisClicked: {
+    type: Object,
+    required: true,
+  },
 });
 if (props.message.value === "Messages") mesNot.value = false;
 else notMes.value = true;
 </script>
 
 <template>
-  <div class="body">
+  <div class="body" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div class="head">
       <h3>{{ message?.value }}</h3>
     </div>
@@ -55,6 +59,7 @@ else notMes.value = true;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+  color: var(--text-main);
 }
 .body {
   display: flex;
@@ -69,7 +74,7 @@ else notMes.value = true;
     0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 1px 2px -1px rgba(0, 0, 0, 0.05);
   gap: 20px;
-  background-color: white;
+  background-color: var(--bg-card);
 }
 
 .head {
@@ -89,7 +94,7 @@ p {
     0 1px 3px 0 rgba(0, 0, 0, 0.295),
     0 1px 2px -1px rgba(0, 0, 0, 0.432);
   gap: 20px;
-  background-color: white;
+  background-color: var(--bg-card);
   transition: scale 0.2s ease;
   margin-bottom: 10px;
   border-top-left-radius: 0px;

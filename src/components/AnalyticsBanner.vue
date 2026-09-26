@@ -14,6 +14,10 @@ const props = defineProps({
     type: Number,
     default: 570,
   },
+  btnisClicked: {
+    type: Object,
+    required: true,
+  },
 });
 
 const previousVolValue = ref(props.baselineVolume);
@@ -97,7 +101,7 @@ watch(
 </script>
 
 <template>
-  <div class="statics">
+  <div class="statics" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div class="volume">
       <span>Volume</span>
       <div class="values">
@@ -178,7 +182,7 @@ p {
 
 span {
   font-size: 0.85rem;
-  color: #8a8a8a;
+  color: var(--text-muted);
   font-weight: 500;
   letter-spacing: -0.2px;
 }
@@ -186,7 +190,7 @@ span {
 .value {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-main);
   letter-spacing: -0.5px;
   position: relative;
   width: fit-content;

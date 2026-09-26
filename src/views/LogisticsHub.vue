@@ -25,11 +25,14 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  btnisClicked: {
+    type: Object,
+    required: true,
+  },
 });
-// The Phase: The cargo hit an international border and got frozen by border agents due to a documentation mismatch or a security inspection flag.
 let workerTimeout = null;
 onMounted(() => {
-  if (props.loginObject?.isLogin && props.messages.length===0) {
+  if (props.loginObject?.isLogin && props.messages.length === 0) {
     triggerWelcomeBanner();
   }
 });
@@ -47,7 +50,7 @@ onUnmounted(() => {
   if (workerTimeout) clearTimeout(workerTimeout);
 });
 
-const emit = defineEmits(["add-cargo", "add-infos", "messages"]);
+const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked"]);
 
 function submitClicked(val) {
   isClicked.value = false;
@@ -114,7 +117,7 @@ function chevron() {
 </script>
 
 <template>
-  <header class="navbar-top" @click="clicked">
+  <header class="navbar-top" @click="clicked" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div
       class="custom-select"
       v-if="loginObject?.isLogin && loginObject"
@@ -161,7 +164,11 @@ function chevron() {
       <i class="fa-regular fa-user"></i>
     </div>
   </header>
-  <div class="dashboard-items" @click="clicked()">
+  <div
+    class="dashboard-items"
+    @click="clicked()"
+    :data-theme="btnisClicked?.value ? 'dark' : 'light'"
+  >
     <!--<button
       @click.stop="
         isClicked = !isClicked;
@@ -170,20 +177,24 @@ function chevron() {
     >
       Click Me
     </button>-->
-    <ShipmentInformation class="info-area" />
-    <ShipmentNetworkMap class="map-area" />
-    <AnalyticsBanner :cargoManifest="cargoManifest" class="banner-area" />
+    <ShipmentInformation class="info-area" :btnisClicked="{ value: btnisClicked.value }" />
+    <ShipmentNetworkMap class="map-area" :btnisClicked="{ value: btnisClicked.value }" />
+    <AnalyticsBanner
+      :cargoManifest="cargoManifest"
+      class="banner-area"
+      :btnisClicked="{ value: btnisClicked.value }"
+    />
     <div class="cargo-truck"></div>
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked" />
+      <CargoForm @submit-clicked="submitClicked" :btnisClicked="{ value: btnisClicked.value }" />
     </div>
   </Transition>
 
   <Transition name="shrink-square-login">
     <div class="dashboard-view-login" v-show="LoginisClicked" @click.stop>
-      <LoginForm @login-infos="LoginClicked" />
+      <LoginForm @login-infos="LoginClicked" :btnisClicked="{ value: btnisClicked.value }" />
     </div>
   </Transition>
   <Transition name="shrink-square-login">
@@ -192,6 +203,7 @@ function chevron() {
         :message="{ value: 'Notifications' }"
         :messageValue="messages"
         :isLogin="{ value: loginObject?.isLogin }"
+        :btnisClicked="{ value: btnisClicked.value }"
       />
     </div>
   </Transition>
@@ -201,6 +213,7 @@ function chevron() {
         :message="{ value: 'Messages' }"
         :messageValue="messages"
         :isLogin="{ value: loginObject?.isLogin }"
+        :btnisClicked="{ value: btnisClicked.value }"
       />
     </div>
   </Transition>
@@ -208,7 +221,7 @@ function chevron() {
 
 <style scoped>
 i {
-  color: #4b5563;
+  color: var(--icon-color);
 }
 
 .loginName {
@@ -237,7 +250,7 @@ i {
   width: 100vw;
   min-height: 100vh;
   position: fixed;
-  background-color: #f8f9f9;
+  background-color: var(--bg-main);
   display: grid;
   grid-template-columns: 1fr 4fr;
   gap: 24px;
@@ -315,8 +328,8 @@ i {
   gap: 24px;
   width: 100%;
   height: 56px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
   flex-shrink: 0;
 }
@@ -337,6 +350,7 @@ i {
 .select-options {
   display: flex;
   flex-direction: column;
+  color: var(--text-main);
   gap: 5px;
   list-style: none;
   cursor: pointer;
@@ -344,9 +358,9 @@ i {
   width: 100%;
   margin: 0;
   padding: 0;
-  background-color: white;
+  background-color: var(--bg-card);
   border-radius: 6px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--border-color);
   margin-top: 5px;
   transform-origin: center top;
   z-index: 10;
@@ -354,7 +368,7 @@ i {
 
 span,
 .select-options li {
-  color: #333333;
+  color: var(--text-main);
   font-size: 13px;
   font-weight: bold;
   padding: 5px 7px;
@@ -362,7 +376,7 @@ span,
 }
 
 .select-options li:hover {
-  background-color: #cccccc;
+  background-color: var(--bg-button-hover);
 }
 
 .shrink-square-enter-active,
@@ -383,10 +397,10 @@ span,
   justify-content: space-between;
   cursor: pointer;
 
-  color: #333333;
+  color: var(--text-main);
 
   padding: 5px 7px;
-  border: 1px solid #cccccc;
+  border: 1px solid var(--bg-button-hover);
   border-radius: 6px;
   gap: 10px;
 }

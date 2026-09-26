@@ -5,12 +5,18 @@ const destination = ref("Rabat");
 const shipmentID = ref("CGO-4821");
 const loadingDock = ref("Dock B2");
 const departed = ref("09:15 AM");
+const props = defineProps({
+  btnisClicked: {
+    type: Object,
+    required: true,
+  },
+});
 </script>
 
 <template>
-  <div class="body">
+  <div class="body" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div class="head">
-      <h3>Shipment Information</h3>
+      <h3 class="txt">Shipment Information</h3>
     </div>
     <div class="dashboard-infos">
       <div class="contact-information custom-dash-bottom">
@@ -18,7 +24,7 @@ const departed = ref("09:15 AM");
           <img src="../assets/operator.png" alt="" class="operator-img" />
           <div class="names">
             <div class="title">Operator</div>
-            <div class="operator-name">Amrou Altanji</div>
+            <div class="operator-name txt">Amrou Altanji</div>
           </div>
         </div>
         <div class="contacts">
@@ -29,15 +35,15 @@ const departed = ref("09:15 AM");
       <div class="shipment-infos custom-dash-bottom">
         <div class="shipment-id">
           <div class="ttl">Shipment ID</div>
-          <div class="bdy">{{ shipmentID }}</div>
+          <div class="bdy txt">{{ shipmentID }}</div>
         </div>
         <div class="loading-dock">
           <div class="ttl">Loading Dock</div>
-          <div class="bdy">{{ loadingDock }}</div>
+          <div class="bdy txt">{{ loadingDock }}</div>
         </div>
         <div class="departed">
           <div class="ttl">Departed</div>
-          <div class="bdy">{{ departed }}</div>
+          <div class="bdy txt">{{ departed }}</div>
         </div>
       </div>
       <div class="shipment-path">
@@ -77,7 +83,7 @@ const departed = ref("09:15 AM");
   padding: 10px;
   width: 40px;
   height: 40px;
-  background-color: #4b5563;
+  background-color: var(--bg-button);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -90,7 +96,7 @@ const departed = ref("09:15 AM");
 }
 .ico :deep(i),
 .ico :deep(svg) {
-  color: #ffffff !important;
+  color: var(--icon-color) !important;
   font-size: 0.9rem;
 }
 
@@ -100,27 +106,31 @@ const departed = ref("09:15 AM");
   justify-content: center;
 }
 .fa-truck-arrow-right {
-  color: white;
+  color: var(--text-main);
 }
 .source,
 .dest {
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text-main);
 }
 .origin,
 .destination {
   display: flex;
   flex-direction: column;
-  background-color: #ffffff; /* Blocks the dashed background line completely */
-  padding: 0 12px; /* Gives comfortable horizontal padding breathing space */
+  background-color: var(--bg-card);
+  padding: 0 12px;
   position: relative;
-  z-index: 10; /* Lifts full container block safely over the line */
+  z-index: 10;
 }
 
 .origin {
   align-items: flex-start;
   text-align: left;
+}
+
+.txt{
+  color: var(--text-main);
 }
 
 .destination {
@@ -148,12 +158,12 @@ const departed = ref("09:15 AM");
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  border-top: 2px dashed #e2e8f0;
+  border-top: 2px dashed var(--bg-button-hover);
   z-index: 1; /* Lowest index layers */
 }
 .ttl,
 .label {
-  color: #8a8a8a;
+  color: var(--text-muted);
 }
 .body {
   display: flex;
@@ -165,11 +175,11 @@ const departed = ref("09:15 AM");
     0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 1px 2px -1px rgba(0, 0, 0, 0.05);
   gap: 20px;
-  background-color: white;
+  background-color: var(--bg-card);
 }
 
 .title {
-  color: #8a8a8a;
+  color: var(--text-muted);
 }
 
 .shipment-infos {
@@ -199,7 +209,11 @@ const departed = ref("09:15 AM");
 }
 
 .custom-dash-bottom {
-  background-image: linear-gradient(to right, #e2e8f0 66%, rgba(255, 255, 255, 0) 0%);
+  background-image: linear-gradient(
+    to right,
+    var(--bg-button-hover) 66%,
+    rgba(255, 255, 255, 0) 0%
+  );
   background-position: bottom;
   background-size: 10px 2px;
   background-repeat: repeat-x;
@@ -218,7 +232,7 @@ const departed = ref("09:15 AM");
 
   object-fit: cover;
 
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--bg-button-hover);
 }
 
 .contacts {
@@ -235,7 +249,7 @@ const departed = ref("09:15 AM");
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background-color: #f1f5f9;
+  background-color: var(--bg-button);
   cursor: pointer;
   transition:
     transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -246,17 +260,17 @@ const departed = ref("09:15 AM");
 .corps :deep(i),
 .corps :deep(svg) {
   font-size: 1rem;
-  color: #64748b;
+  color: var(--icon-color);
   transition: color 0.2s ease;
 }
 
 .corps:hover {
   transform: scale(1.1);
-  background-color: #e2e8f0;
+  background-color: var(--bg-button-hover);
 }
 
 .corps:hover i {
-  color: #1e293b;
+  color: var(--text-main);
 }
 
 .dashboard-infos {

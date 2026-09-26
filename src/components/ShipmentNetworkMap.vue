@@ -1,9 +1,15 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
+const props = defineProps({
+  btnisClicked: {
+    type: Object,
+    required: true,
+  },
+});
 </script>
 
 <template>
-  <div class="body">
+  <div class="body" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div class="head">
       <h3>Shipment Network Map</h3>
       <i class="fa-solid fa-arrow-up"></i>
@@ -30,7 +36,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
     0 1px 3px 0 rgba(0, 0, 0, 0.05),
     0 1px 2px -1px rgba(0, 0, 0, 0.05);
   gap: 20px;
-  background-color: white;
+  background-color: var(--bg-card);
 }
 .fa-arrow-up {
   transform: rotate(45deg);
@@ -44,7 +50,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
   display: grid;
   width: 100%;
   grid-template-columns: repeat(8, 1fr);
-  background-color: #eeeeee;
+  background-color: var(--border-color);
   gap: 3px;
   position: relative;
 }
@@ -67,7 +73,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 }
 .keys div::after {
   position: absolute;
-  color: #979798;
+  color: var(--text-muted);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -102,7 +108,7 @@ import { ref, computed, onMounted, onUnmounted } from "vue";
 }
 
 .square {
-  background-color: #ffffff;
+  background-color: var(--bg-card);
   width: 100%;
   height: 40px;
   display: flex;
