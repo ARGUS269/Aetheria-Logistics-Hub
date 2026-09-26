@@ -30,6 +30,16 @@ const props = defineProps({
     required: true,
   },
 });
+const truckWrapperRef = ref(null);
+const scrollProgress = ref(0);
+watch(scrollProgress, (newProgress) => {
+  if (truckWrapperRef.value) {
+    const maxScroll = truckWrapperRef.value.scrollWidth - truckWrapperRef.value.clientWidth;
+    const parsedProgress = parseFloat(newProgress);
+
+    truckWrapperRef.value.scrollLeft = (parsedProgress / 100) * maxScroll;
+  }
+});
 let workerTimeout = null;
 onMounted(() => {
   if (props.loginObject?.isLogin && props.messages.length === 0) {
@@ -97,7 +107,7 @@ function loginisClicked() {
   MessageisClicked.value = false;
 }
 
-function cargoClicked(){
+function cargoClicked() {
   TransIsRotated.value = false;
   LoginisClicked.value = false;
   MessageisClicked.value = false;
@@ -176,27 +186,50 @@ function chevron() {
     @click="clicked()"
     :data-theme="btnisClicked?.value ? 'dark' : 'light'"
   >
-    <ShipmentInformation class="info-area" :btnisClicked="{ value: btnisClicked.value }" />
-    <ShipmentNetworkMap class="map-area" :btnisClicked="{ value: btnisClicked.value }" />
-    <AnalyticsBanner
-      :cargoManifest="cargoManifest"
-      class="banner-area"
-      :btnisClicked="{ value: btnisClicked.value }"
-    />
-    <div class="cargo-truck">
-      <button
-        @click.stop="
-          isClicked = !isClicked;
-          if (isClicked) cargoClicked();
-        "
-      >
-        Click Me
-      </button>
+    <div class="left-dashboard-panel">
+      <ShipmentInformation class="info-area" :btnisClicked="{ value: btnisClicked.value }" />
+      <ShipmentNetworkMap class="map-area" :btnisClicked="{ value: btnisClicked.value }" />
+    </div>
+    <div class="right-dashboard-panel">
+      <AnalyticsBanner
+        :cargoManifest="cargoManifest"
+        class="banner-area"
+        :btnisClicked="{ value: btnisClicked.value }"
+      />
+      <div class="cargo-truck">
+        <div class="slicer">
+          <div class="slider-rail-wrapper">
+            <input
+              type="range"
+              min="0"
+              max="100"
+              step="0.01"
+              v-model="scrollProgress"
+              class="custom-scale-slider"
+            />
+          </div>
+          <div class="cargo-truck-container" ref="truckWrapperRef">
+            <img src="../assets/cargo-truck-background.png" alt="cargo truck" />
+          </div>
+        </div>
+        <!--<button
+          @click.stop="
+            isClicked = !isClicked;
+            if (isClicked) cargoClicked();
+          "
+        >
+          Click Me
+        </button>-->
+      </div>
     </div>
   </div>
   <Transition name="shrink-square">
     <div class="dashboard-view" v-if="isClicked" @click.stop>
-      <CargoForm @submit-clicked="submitClicked($event)" :cargoManifest="cargoManifest" :btnisClicked="{ value: btnisClicked.value }" />
+      <CargoForm
+        @submit-clicked="submitClicked($event)"
+        :cargoManifest="cargoManifest"
+        :btnisClicked="{ value: btnisClicked.value }"
+      />
     </div>
   </Transition>
 
@@ -242,6 +275,80 @@ i {
   position: relative;
 }
 
+.cargo-truck-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  height: 550px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  border-radius: 12px;
+
+  scroll-behavior: smooth;
+}
+
+.cargo-truck-container img {
+  width: 1500px;
+  height: 1200px;
+  object-fit: cover;
+  object-position: center 180%;
+  display: block;
+}
+
+.slider-rail-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+  padding: 0 40px;
+
+}
+
+.custom-scale-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  max-width: 150px;
+  height: 6px;
+  background-color: var(--text-muted);
+  border-radius: 20px;
+  outline: none;
+  cursor: pointer;
+  align-self: end;
+}
+
+.custom-scale-slider::-webkit-scrollbar-thumb,
+.custom-scale-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+
+  width: 60px;
+  height: 14px;
+  background-color: var(--text-main);
+  border-radius: 20px;
+  border: 2px solid var(--bg-card);
+  box-shadow: 0 1px 4px rgba(var(--shadow-color), 0.15);
+  transition:
+    transform 0.1s ease,
+    background-color 0.1s ease;
+}
+
+.custom-scale-slider::-webkit-slider-thumb:hover {
+  transform: scaleY(1.15);
+}
+
+.custom-scale-slider::-moz-range-thumb {
+  width: 60px;
+  height: 14px;
+  border-radius: 20px;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
 .not::before {
   content: "";
   position: absolute;
@@ -254,38 +361,56 @@ i {
   transform: translateX(50%);
 }
 
-.dashboard-items {
-  width: 100vw;
-  min-height: 100vh;
-  position: fixed;
-  background-color: var(--bg-main);
-  display: grid;
-  grid-template-columns: 1fr 4fr;
+.left-dashboard-panel {
+  display: flex;
+  flex-direction: column;
   gap: 24px;
-  grid-template-areas:
-    "info  banner"
-    "map    truck";
-  padding-left: 20px;
+  justify-content: space-around;
+}
+.right-dashboard-panel {
+  display: grid;
+  grid-template-rows: 1fr 7fr;
+  gap: 24px;
+  height: 100%;
+}
+.dashboard-items {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+  width: 100%;
+  min-height: 100%;
+  padding: 40px;
+  background-color: var(--bg-main);
 }
 .banner-area {
-  grid-area: banner;
   height: fit-content;
-  align-self: self-start;
+  align-self: start;
+}
+.slicer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .cargo-truck {
-  grid-area: truck;
+  display: flex;
+  align-items: flex-start;
+  justify-content: end;
+}
+
+.info-area,
+.map-area {
+  width: 100%;
+  height: fit-content;
 }
 
 .info-area {
   grid-area: info;
-  height: fit-content;
-  margin-top: 68px;
 }
 
 .map-area {
   grid-area: map;
-  height: fit-content;
 }
 
 .dashboard-view {
@@ -337,9 +462,7 @@ i {
   gap: 24px;
   width: 100%;
   height: 56px;
-  background-color: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  background-color: var(--bg-main);
   flex-shrink: 0;
 }
 
