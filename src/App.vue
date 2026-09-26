@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, provide, computed } from "vue";
 
 const cargoManifest = ref([
   {
@@ -25,6 +25,7 @@ const cargoManifest = ref([
 const userGreetingValue = ref([]);
 
 const loginObject = ref(null);
+provide("globalUser", computed(() => loginObject.value));
 
 function NewMessage(payload) {
   userGreetingValue.value.push(payload);
@@ -35,7 +36,13 @@ function SubmitClickedToParent(payload) {
 }
 
 function LoginClickedToParent(payload) {
-  loginObject.value = payload;
+  if (!payload || payload.isLogin === false) {
+    // If logging out, completely wipe the object reference so v-if evaluations switch back safely
+    loginObject.value = null;
+  } else {
+    // If logging in, save the active payload dataset session
+    loginObject.value = payload;
+  }
 }
 const isClicked = ref(false);
 </script>

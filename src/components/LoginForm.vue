@@ -1,22 +1,29 @@
 <script setup>
-import { ref } from "vue";
+import { ref, inject, watch, computed } from "vue";
 
 const isShow = ref(false);
 const inputError = ref(false);
 const remember = ref(false);
 const emailField = ref("");
 const passwordField = ref("");
-const isLogin = ref(false);
+const globalUserCapsule = inject("globalUser");
+const user = computed(() => globalUserCapsule?.value);
+const isLogin = ref(!!user.value);
 
 const emit = defineEmits(["login-infos"]);
-
-function testEmailInput() {
+watch(
+  () => user.value,
+  (newUser) => {
+    isLogin.value = !!newUser;
+    if (newUser) {
+      // Auto-populate the email input from the injected session data if it exists
+      emailField.value = newUser.email || "";
+    }
+  },
+  { deep: true, immediate: true }
+);
+function testPasswordInput() {
   inputError.value = false;
-
-  if (emailField.value === "") {
-    inputError.value = true;
-    return;
-  }
 }
 
 function dispatchSignal() {
@@ -35,13 +42,17 @@ function dispatchSignal() {
 
   isLogin.value = true;
 
-  emit("login-infos", {
-    fullName: "AKOUDAD Abdessamad",
-    email: emailField.value,
-    password: passwordField.value,
-    isRemembered: remember.value,
-    isLogin: isLogin.value,
-  });
+  if (user?.value) {
+    emit("login-infos", { ...user.value, isLogin: true });
+  } else {
+    emit("login-infos", {
+      fullName: "AKOUDAD Abdessamad",
+      email: emailField.value,
+      password: passwordField.value,
+      isRemembered: remember.value,
+      isLogin: isLogin.value,
+    });
+  }
 }
 
 function dispatchSignalLogOut() {
@@ -52,7 +63,9 @@ function dispatchSignalLogOut() {
   passwordField.value = "";
 
   emit("login-infos", {
-    isLogin: isLogin.value,
+    isLogin: false,
+    fullName: null,
+    email: null,
   });
 }
 </script>
@@ -108,13 +121,13 @@ function dispatchSignalLogOut() {
         <a href="#" class="contact-us">Contact Us</a>
       </div>
     </form>
-    <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-if="isLogin">
+    <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-else>
       <h2>Welcome back</h2>
-      <p class="subtitle">AKOUDAD Abdessamad</p>
+      <p class="subtitle">{{user?.fullName || "AKOUDAD Abdessamad"}}</p>
 
       <img src="../assets/man.png" alt="perso-photo" />
 
-      <span>Your Email: {{ emailField }}</span>
+      <span>Your Email: {{ emailField|| user?.email }}</span>
       <hr />
 
       <button type="submit">Log Out</button>
