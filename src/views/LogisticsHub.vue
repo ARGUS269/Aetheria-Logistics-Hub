@@ -210,6 +210,33 @@ function chevron() {
           </div>
           <div class="cargo-truck-container" ref="truckWrapperRef">
             <img src="../assets/cargo-truck-background.png" alt="cargo truck" />
+            <div class="trailer-mask-bg">
+              <div class="trailer-cargo-grid">
+                <div class="cargo-box small-box">
+                  <div class="box-header"><span>PLT</span><span>48 kg</span></div>
+                  <div class="box-route">3-CHI-ATL</div>
+                </div>
+                <div class="cargo-box small-box striped-pattern">
+                  <div class="box-header"><span>FRT</span></div>
+                  <div class="box-route">1-DAL-HOU</div>
+                </div>
+                <div class="cargo-box large-box active-load-zone">
+                  <div class="box-header"><span>PLT</span><span>124 kg</span></div>
+                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <div class="status-badge"><span class="dot"></span> Loading</div>
+                </div>
+                <div class="cargo-box x-large-box active-load-zone">
+                  <div class="box-header"><span>PLT</span><span>250 kg</span></div>
+                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <div class="status-badge"><span class="dot"></span> Loading</div>
+                </div>
+                <div class="cargo-box last-large-box active-load-zone">
+                  <div class="box-header"><span>PLT</span><span>150 kg</span></div>
+                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <div class="status-badge"><span class="dot"></span> Loading</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <!--<button
@@ -275,6 +302,96 @@ i {
   position: relative;
 }
 
+.trailer-mask-bg {
+  position: absolute;
+
+  top: 5%;
+  left: 30%;
+  width: calc(100% - 240px);
+  height: calc(100% - 200px);
+
+  background-color: #ffffff;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.trailer-cargo-grid {
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  grid-template-rows: 1fr 2fr;
+  gap: 6px;
+  padding: 6px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.cargo-box {
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.box-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.box-route {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.add-box-btn {
+  align-self: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  background-color: var(--text-main);
+  border: none;
+  color: var(--bg-card);
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.15s ease;
+}
+.add-box-btn:hover {
+  transform: scale(1.1);
+}
+
+.large-box {
+  position: relative;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  border: 1.5px solid var(--text-main);
+}
+.x-large-box {
+  position: relative;
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  border: 1.5px solid var(--text-main);
+}
+.last-large-box {
+  position: relative;
+  grid-column: 3 / 4;
+  grid-row: 1 / 3;
+  border: 1.5px solid var(--text-main);
+}
 .cargo-truck-container {
   position: relative;
   width: 100%;
@@ -285,6 +402,45 @@ i {
   border-radius: 12px;
 
   scroll-behavior: smooth;
+}
+
+.status-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge .dot {
+  width: 16px;
+  height: 16px;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+.striped-pattern {
+  background-color: var(--bg-button);
+  grid-column: 2 / 3;
+  background-image: linear-gradient(
+    45deg,
+    var(--bg-button-hover) 25%,
+    transparent 25%,
+    transparent 50%,
+    var(--bg-button-hover) 50%,
+    var(--bg-button-hover) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 10px 10px;
 }
 
 .cargo-truck-container img {
@@ -304,7 +460,6 @@ i {
   max-width: 1200px;
   margin-top: 20px;
   padding: 0 40px;
-
 }
 
 .custom-scale-slider {
