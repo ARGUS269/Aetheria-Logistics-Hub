@@ -79,7 +79,7 @@ const departedTimeFormatted = computed(() => {
         </div>
       </div>
     </div>
-    <div v-show="!isLogin?.value">No Connection!!</div>
+    <div class="error" v-show="!isLogin?.value">No Connection!!</div>
   </div>
 </template>
 
@@ -95,6 +95,11 @@ const departedTimeFormatted = computed(() => {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
+}
+.error{
+  font-size: 15px;
+  font-weight: 700;
+  color: #ef4444;
 }
 .shipment-path,
 .shipment-infos {

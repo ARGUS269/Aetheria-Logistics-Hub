@@ -12,6 +12,7 @@ const MessageisClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
 const largeBoxPureWeight = ref(124);
+const boxPureWeight = ref(0);
 const cargoManifestDefault = ref([]);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
@@ -66,9 +67,11 @@ const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked"]);
 
 function submitClicked(val) {
   if (isClicked.value) {
-    largeBoxPureWeight.value -= parseInt(val.weight);
+    const incomingWeight = parseInt(val.weight) || 0;
+    largeBoxPureWeight.value -= incomingWeight;
+    boxPureWeight.value = largeBoxPureWeight.value;
   }
-  isClicked.value=false
+  isClicked.value = false;
   emit("add-cargo", val);
 }
 
@@ -207,6 +210,7 @@ function chevron() {
       <div class="right-top-dashboard-panel">
         <AnalyticsBanner
           :cargoManifest="cargoManifest"
+          :isLogin="{ value: loginObject?.isLogin }"
           class="banner-area"
           :btnisClicked="{ value: btnisClicked.value }"
         />
@@ -287,6 +291,7 @@ function chevron() {
         @submit-clicked="submitClicked($event)"
         :cargoManifest="cargoManifest"
         :btnisClicked="{ value: btnisClicked.value }"
+        :boxPureWeight="{ value: boxPureWeight }"
       />
     </div>
   </Transition>

@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 const categorization = ref("Electronics");
 const destinationCity = ref("");
 const TransIsRotated = ref(false);
@@ -8,6 +8,7 @@ const valValue = ref(500);
 const launch = ref("Launch Cargo");
 const isLaunched = ref(false);
 const inputError = ref(false);
+const maxValue = ref(1000);
 const emit = defineEmits(["submit-clicked"]);
 
 const props = defineProps({
@@ -19,7 +20,20 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  boxPureWeight: {
+    type: Object,
+    required: true,
+  },
 });
+
+watch(
+  () => props.boxPureWeight?.value,
+  (newValue) => {
+    if (newValue !== 0) {
+      maxValue.value = newValue;
+    }
+  },
+);
 
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -57,12 +71,12 @@ function cargoSubmit() {
       status: "MANIFEST_CREATED",
       transitProgress: 0,
     });
-    categorization.value = "Electronics"
-    launch.value="Launch Cargo"
+    categorization.value = "Electronics";
+    launch.value = "Launch Cargo";
     destinationCity.value = "";
     massValue.value = 10;
     valValue.value = 500;
-     isLaunched.value = false;
+    isLaunched.value = false;
     clearInterval(intervalID);
   }, 2000);
 }
@@ -117,7 +131,7 @@ function testInput() {
             type="range"
             id="scale-slider"
             min="10"
-            max="2000"
+            :max="maxValue"
             step="10"
             list="scale-markers"
             v-model="massValue"
@@ -125,11 +139,10 @@ function testInput() {
           />
 
           <div class="scale-ticks">
-            <span>10kg</span>
-            <span>500kg</span>
-            <span>1000kg</span>
-            <span>1500kg</span>
-            <span>2000kg</span>
+            <span>{{ Math.round(maxValue / 8) }}kg</span>
+            <span>{{ Math.round(maxValue / 4) }}kg</span>
+            <span>{{ Math.round(maxValue / 2) }}kg</span>
+            <span>{{ Math.round(maxValue) }}kg</span>
           </div>
         </div>
       </div>

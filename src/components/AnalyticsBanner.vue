@@ -18,6 +18,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  isLogin: {
+    type: Object,
+    required: true,
+  },
 });
 
 const previousVolValue = ref(props.baselineVolume);
@@ -30,12 +34,14 @@ const trendMassPrint = ref("");
 const trendVolPrint = ref("");
 
 const totalVol = computed(() => {
+  if(!props.isLogin?.value) return 0
   return props.cargoManifest.reduce((accumulator, item) => {
     return accumulator + parseInt(item.value);
   }, 0);
 });
 
 const totalCustomHolds = computed(() => {
+  if(!props.isLogin?.value) return 0
   return props.cargoManifest.reduce((accumulator, item) => {
     if (item.status === "HELD_IN_CUSTOMS") return accumulator + 1;
     return accumulator;
@@ -43,6 +49,7 @@ const totalCustomHolds = computed(() => {
 });
 
 const totalMass = computed(() => {
+  if(!props.isLogin?.value) return 0
   return props.cargoManifest.reduce((accumulator, item) => {
     return accumulator + parseInt(item.weight);
   }, 0);
