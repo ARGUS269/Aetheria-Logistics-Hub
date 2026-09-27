@@ -11,6 +11,7 @@ const NotificationsisClicked = ref(false);
 const MessageisClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
+const cargoManifestDefault = ref([]);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
   cargoManifest: {
@@ -210,7 +211,7 @@ function chevron() {
           </div>
           <div class="cargo-truck-container" ref="truckWrapperRef">
             <img src="../assets/cargo-truck-background.png" alt="cargo truck" />
-            <div class="trailer-mask-bg">
+            <div class="trailer-mask-bg" v-show="loginObject?.isLogin">
               <div class="trailer-cargo-grid">
                 <div class="cargo-box small-box">
                   <div class="box-header"><span>PLT</span><span>48 kg</span></div>
@@ -222,17 +223,41 @@ function chevron() {
                 </div>
                 <div class="cargo-box large-box active-load-zone">
                   <div class="box-header"><span>PLT</span><span>124 kg</span></div>
-                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <button
+                    class="add-box-btn"
+                    @click.stop="
+                      isClicked = !isClicked;
+                      if (isClicked) cargoClicked();
+                    "
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
                   <div class="status-badge"><span class="dot"></span> Loading</div>
                 </div>
                 <div class="cargo-box x-large-box active-load-zone">
                   <div class="box-header"><span>PLT</span><span>250 kg</span></div>
-                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <button
+                    class="add-box-btn"
+                    @click.stop="
+                      isClicked = !isClicked;
+                      if (isClicked) cargoClicked();
+                    "
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
                   <div class="status-badge"><span class="dot"></span> Loading</div>
                 </div>
                 <div class="cargo-box last-large-box active-load-zone">
                   <div class="box-header"><span>PLT</span><span>150 kg</span></div>
-                  <button class="add-box-btn"><i class="fa-solid fa-plus"></i></button>
+                  <button
+                    class="add-box-btn"
+                    @click.stop="
+                      isClicked = !isClicked;
+                      if (isClicked) cargoClicked();
+                    "
+                  >
+                    <i class="fa-solid fa-plus"></i>
+                  </button>
                   <div class="status-badge"><span class="dot"></span> Loading</div>
                 </div>
               </div>
@@ -251,7 +276,7 @@ function chevron() {
     </div>
   </div>
   <Transition name="shrink-square">
-    <div class="dashboard-view" v-if="isClicked" @click.stop>
+    <div class="dashboard-view" v-show="isClicked" @click.stop>
       <CargoForm
         @submit-clicked="submitClicked($event)"
         :cargoManifest="cargoManifest"
@@ -573,6 +598,7 @@ i {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 99;
 }
 
 .shrink-square-enter-active,
@@ -592,6 +618,7 @@ i {
   position: absolute;
   top: 50px;
   right: 30px;
+  z-index: 99;
 }
 
 .shrink-square-login-enter-active,

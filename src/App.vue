@@ -22,6 +22,7 @@ const cargoManifest = ref([
   },
 ]);
 const btnisClicked = ref(false);
+const isClicked = ref(false);
 
 function btnISClicked() {
   btnisClicked.value = !btnisClicked.value;
@@ -30,9 +31,14 @@ function btnISClicked() {
 const userGreetingValue = ref([]);
 
 const loginObject = ref(null);
+const AMPMObject = ref("en-US");
 provide(
   "globalUser",
   computed(() => loginObject.value),
+);
+provide(
+  "globalAMPM",
+  computed(() => AMPMObject.value),
 );
 
 function NewMessage(payload) {
@@ -54,7 +60,9 @@ function LoginClickedToParent(payload) {
     loginObject.value = payload;
   }
 }
-const isClicked = ref(false);
+function AMPMValue(payload){
+  AMPMObject.value = payload;
+}
 </script>
 
 <template>
@@ -98,6 +106,7 @@ const isClicked = ref(false);
             @add-infos="LoginClickedToParent"
             @messages="NewMessage"
             @btn-clicked="btnISClicked"
+            @AMPM-value="AMPMValue"
           />
         </RouterView>
       </main>

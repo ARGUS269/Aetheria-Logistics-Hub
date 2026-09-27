@@ -1,5 +1,7 @@
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+const TransIsRotated = ref(false);
+const AMPMValue = ref("en-US");
 const props = defineProps({
   cargoManifest: {
     type: Array,
@@ -13,16 +15,25 @@ const props = defineProps({
     type: Array,
     required: true,
   },
-  btnisClicked:{
+  btnisClicked: {
     type: Object,
     required: true,
-  }
+  },
 });
-const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked"]);
-
-function btnisClickedFun(){
+const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked", "AMPM-value"]);
+function chevron() {
+  TransIsRotated.value = !TransIsRotated.value;
+}
+function selectOption(val) {
+  AMPMValue.value = val;
+  TransIsRotated.value = !TransIsRotated.value;
+}
+function btnisClickedFun() {
   emit("btn-clicked");
 }
+watch(AMPMValue, () => {
+  emit("AMPM-value", AMPMValue.value );
+});
 </script>
 
 <template>
@@ -46,14 +57,26 @@ function btnisClickedFun(){
         </div>
       </label>
 
-      <div class="language"></div>
-      <div class="date-format"></div>
+      <div class="custom-select">
+        <div class="select-trigger" @click="chevron">
+          <span>{{ AMPMValue }}</span>
+          <div>
+            <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+          </div>
+        </div>
+        <Transition name="shrink-square">
+          <ul class="select-options" v-if="TransIsRotated">
+            <li class="first-li" @click="selectOption('en-US')">en-US</li>
+            <li @click="selectOption('en-GB')">en-GB</li>
+            <li @click="selectOption('zh-CN')">zh-CN</li>
+          </ul>
+        </Transition>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-
 .settings-page-wrapper {
   display: flex;
   flex-direction: column;
@@ -76,6 +99,30 @@ function btnisClickedFun(){
   border-radius: 12px;
   border: 1px solid var(--border-color);
   max-width: 400px;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.select-trigger {
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
+
+  color: var(--text-main);
+
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.select-trigger div i {
+  transition: transform 0.3s ease;
+}
+
+.rotated-state {
+  transform: rotate(180deg);
 }
 
 .operator-img {
@@ -110,7 +157,13 @@ function btnisClickedFun(){
 }
 
 span {
-  font-family: "Inter", "Roboto", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family:
+    "Inter",
+    "Roboto",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   color: var(--text-main);
   transition: color 0.25s ease-in-out;
 }
@@ -119,6 +172,47 @@ span {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.select-options li {
+  color: var(--text-main);
+
+  padding: 10px 14px;
+}
+
+.select-options li:hover {
+  background-color: var(--bg-button-hover);
+}
+
+.select-options {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  list-style: none;
+  cursor: pointer;
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-card);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-top: 5px;
+  transform-origin: center top;
+  z-index: 10;
+}
+
+.shrink-square-enter-active,
+.shrink-square-leave-active {
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.shrink-square-enter-from,
+.shrink-square-leave-to {
+  opacity: 0;
+  transform: scale(0.4);
 }
 
 label {

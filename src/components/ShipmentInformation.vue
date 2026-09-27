@@ -1,15 +1,28 @@
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, inject } from "vue";
 const source = ref("Agadir");
 const destination = ref("Rabat");
 const shipmentID = ref("CGO-4821");
 const loadingDock = ref("Dock B2");
-const departed = ref("09:15 AM");
+const globalAMPMCapsule = inject("globalAMPM");
 const props = defineProps({
   btnisClicked: {
     type: Object,
     required: true,
   },
+});
+
+const departedTimeFormatted = computed(() => {
+  const d = new Date();
+  const timeOptions = {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  };
+
+  const activeLocale = globalAMPMCapsule?.value || "en-US";
+
+  return d.toLocaleTimeString(activeLocale, timeOptions);
 });
 </script>
 
@@ -43,7 +56,7 @@ const props = defineProps({
         </div>
         <div class="departed">
           <div class="ttl">Departed</div>
-          <div class="bdy txt">{{ departed }}</div>
+          <div class="bdy txt">{{ departedTimeFormatted }}</div>
         </div>
       </div>
       <div class="shipment-path">
