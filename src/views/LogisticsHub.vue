@@ -11,6 +11,7 @@ const NotificationsisClicked = ref(false);
 const MessageisClicked = ref(false);
 const LoginisClicked = ref(false);
 const TransIsRotated = ref(false);
+const largeBoxPureWeight = ref(124);
 const cargoManifestDefault = ref([]);
 const status = ["MANIFEST_CREATED", "IN_TRANSIT", "HELD_IN_CUSTOMS", "DELIVERED"];
 const props = defineProps({
@@ -64,7 +65,10 @@ onUnmounted(() => {
 const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked"]);
 
 function submitClicked(val) {
-  isClicked.value = false;
+  if (isClicked.value) {
+    largeBoxPureWeight.value -= parseInt(val.weight);
+  }
+  isClicked.value=false
   emit("add-cargo", val);
 }
 
@@ -200,11 +204,15 @@ function chevron() {
       />
     </div>
     <div class="right-dashboard-panel">
-      <AnalyticsBanner
-        :cargoManifest="cargoManifest"
-        class="banner-area"
-        :btnisClicked="{ value: btnisClicked.value }"
-      />
+      <div class="right-top-dashboard-panel">
+        <AnalyticsBanner
+          :cargoManifest="cargoManifest"
+          class="banner-area"
+          :btnisClicked="{ value: btnisClicked.value }"
+        />
+        <button class="dispatch">Dispatch</button>
+      </div>
+
       <div class="cargo-truck">
         <div class="slicer">
           <div class="slider-rail-wrapper">
@@ -219,10 +227,10 @@ function chevron() {
           </div>
           <div class="cargo-truck-container" ref="truckWrapperRef">
             <img src="../assets/cargo-truck-background.png" alt="cargo truck" />
-            <div class="trailer-mask-bg" v-show="loginObject?.isLogin">
-              <div class="trailer-cargo-grid">
+            <div class="trailer-mask-bg">
+              <div class="trailer-cargo-grid" v-show="loginObject?.isLogin">
                 <div class="cargo-box small-box">
-                  <div class="box-header"><span>PLT</span><span>48 kg</span></div>
+                  <div class="box-header"><span>PLT</span><span>Max kg</span></div>
                   <div class="box-route">3-CHI-ATL</div>
                 </div>
                 <div class="cargo-box small-box striped-pattern">
@@ -230,7 +238,9 @@ function chevron() {
                   <div class="box-route">1-DAL-HOU</div>
                 </div>
                 <div class="cargo-box large-box active-load-zone">
-                  <div class="box-header"><span>PLT</span><span>124 kg</span></div>
+                  <div class="box-header">
+                    <span>PLT</span><span>{{ largeBoxPureWeight }} kg</span>
+                  </div>
                   <button
                     class="add-box-btn"
                     @click.stop="
@@ -244,26 +254,14 @@ function chevron() {
                 </div>
                 <div class="cargo-box x-large-box active-load-zone">
                   <div class="box-header"><span>PLT</span><span>250 kg</span></div>
-                  <button
-                    class="add-box-btn"
-                    @click.stop="
-                      isClicked = !isClicked;
-                      if (isClicked) cargoClicked();
-                    "
-                  >
+                  <button class="add-box-btn">
                     <i class="fa-solid fa-plus"></i>
                   </button>
                   <div class="status-badge"><span class="dot"></span> Loading</div>
                 </div>
                 <div class="cargo-box last-large-box active-load-zone">
                   <div class="box-header"><span>PLT</span><span>150 kg</span></div>
-                  <button
-                    class="add-box-btn"
-                    @click.stop="
-                      isClicked = !isClicked;
-                      if (isClicked) cargoClicked();
-                    "
-                  >
+                  <button class="add-box-btn">
                     <i class="fa-solid fa-plus"></i>
                   </button>
                   <div class="status-badge"><span class="dot"></span> Loading</div>
@@ -338,12 +336,12 @@ i {
 .trailer-mask-bg {
   position: absolute;
 
-  top: 5%;
-  left: 30%;
-  width: calc(100% - 240px);
+  top: 4%;
+  left: 29.8%;
+  width: calc(100% - 235px);
   height: calc(100% - 200px);
 
-  background-color: #ffffff;
+  background-color: var(--text-main);
   border-radius: 4px;
   z-index: 1;
 }
@@ -393,6 +391,8 @@ i {
   transform: translateY(-50%);
   width: 30px;
   height: 30px;
+  scale: 1;
+
   border-radius: 6px;
   background-color: var(--text-main);
   border: none;
@@ -401,10 +401,29 @@ i {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: transform 0.15s ease;
+  transition: scale 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .add-box-btn:hover {
-  transform: scale(1.1);
+  scale: 1.1;
+}
+.right-top-dashboard-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.right-top-dashboard-panel .dispatch {
+  scale: 1;
+
+  border-radius: 6px;
+  padding: 10px;
+  background-color: var(--text-main);
+  border: none;
+  color: var(--bg-card);
+  cursor: pointer;
+  transition: scale 0.15s ease;
+}
+.right-top-dashboard-panel .dispatch:hover {
+  scale: 1.1;
 }
 
 .large-box {
@@ -501,7 +520,7 @@ i {
   width: 100%;
   max-width: 150px;
   height: 6px;
-  background-color: var(--text-muted);
+  background-color: var(--text-main);
   border-radius: 20px;
   outline: none;
   cursor: pointer;
@@ -515,9 +534,9 @@ i {
 
   width: 60px;
   height: 14px;
-  background-color: var(--text-main);
+  background-color: var(--scrollbar-thumb);
   border-radius: 20px;
-  border: 2px solid var(--bg-card);
+  border: 2px solid var(--text-main);
   box-shadow: 0 1px 4px rgba(var(--shadow-color), 0.15);
   transition:
     transform 0.1s ease,
@@ -525,6 +544,7 @@ i {
 }
 
 .custom-scale-slider::-webkit-slider-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
   transform: scaleY(1.15);
 }
 

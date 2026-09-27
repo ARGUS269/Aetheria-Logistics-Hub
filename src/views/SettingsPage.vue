@@ -19,7 +19,18 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  AMPMValueParent: {
+    type: Object,
+    required: true,
+  },
 });
+watch(
+  () => props.AMPMValueParent?.value,
+  (newValue) => {
+    if (newValue) AMPMValue.value = newValue;
+  },
+  { immediate: true }, //Auto-syncs the value on the very first frame the component mounts!
+);
 const emit = defineEmits(["add-cargo", "add-infos", "messages", "btn-clicked", "AMPM-value"]);
 function chevron() {
   TransIsRotated.value = !TransIsRotated.value;
@@ -32,7 +43,7 @@ function btnisClickedFun() {
   emit("btn-clicked");
 }
 watch(AMPMValue, () => {
-  emit("AMPM-value", AMPMValue.value );
+  emit("AMPM-value", AMPMValue.value);
 });
 </script>
 

@@ -102,6 +102,7 @@ function AMPMValue(payload){
             :loginObject="loginObject"
             :messages="userGreetingValue"
             :btnisClicked="{ value: btnisClicked }"
+            :AMPMValueParent="{ value: AMPMObject }"
             @add-cargo="SubmitClickedToParent"
             @add-infos="LoginClickedToParent"
             @messages="NewMessage"

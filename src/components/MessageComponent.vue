@@ -40,9 +40,7 @@ else notMes.value = true;
       </div>
     </div>
     <div class="isNotLogin" v-else>
-      <div class="message">
-        You Are Not Login Yet
-      </div>
+      <div class="message">You Are Not Login Yet</div>
     </div>
   </div>
 </template>
@@ -69,12 +67,34 @@ else notMes.value = true;
   min-height: 150px;
   max-height: 450px;
   border-radius: 16px;
-  overflow: scroll;
+  overflow-y: auto;
+  overflow-x: hidden;
   box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.05),
-    0 1px 2px -1px rgba(0, 0, 0, 0.05);
+    0 1px 3px 0 rgba(var(--shadow-color), var(--shadow-opacity, 0.05)),
+    0 1px 2px -1px rgba(var(--shadow-color), var(--shadow-opacity, 0.05));
   gap: 20px;
   background-color: var(--bg-card);
+}
+
+.body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.body::-webkit-scrollbar-track {
+  background: transparent;
+}
+.body::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.body:hover::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+}
+
+.body::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scrollbar-thumb-hover);
 }
 
 .head {
@@ -82,25 +102,30 @@ else notMes.value = true;
   justify-content: start;
 }
 
-.message,
 p {
   display: flex;
   flex-direction: column;
-  width: 320px;
+  width: 100%;
+
   cursor: pointer;
   padding: 20px;
   border-radius: 16px;
-  box-shadow:
-    0 1px 3px 0 rgba(0, 0, 0, 0.295),
-    0 1px 2px -1px rgba(0, 0, 0, 0.432);
-  gap: 20px;
   background-color: var(--bg-card);
-  transition: scale 0.2s ease;
   margin-bottom: 10px;
   border-top-left-radius: 0px;
+
+  scale: 1;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease;
+
+  box-shadow:
+    0 4px 6px -1px rgba(var(--shadow-color), 0.05),
+    0 2px 4px -1px rgba(var(--shadow-color), 0.03);
 }
 .message:hover,
 p:hover {
-  scale: 1.05;
+  transform: scale(1.02);
+  box-shadow:
+    0 10px 15px -3px rgba(var(--shadow-color), 0.08),
+    0 4px 6px -2px rgba(var(--shadow-color), 0.04);
 }
 </style>

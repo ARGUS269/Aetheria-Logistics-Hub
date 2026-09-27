@@ -57,10 +57,12 @@ function cargoSubmit() {
       status: "MANIFEST_CREATED",
       transitProgress: 0,
     });
-    categorization.value = "Electronics";
+    categorization.value = "Electronics"
+    launch.value="Launch Cargo"
     destinationCity.value = "";
     massValue.value = 10;
     valValue.value = 500;
+     isLaunched.value = false;
     clearInterval(intervalID);
   }, 2000);
 }
