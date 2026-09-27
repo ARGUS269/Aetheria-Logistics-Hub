@@ -188,8 +188,16 @@ function chevron() {
     :data-theme="btnisClicked?.value ? 'dark' : 'light'"
   >
     <div class="left-dashboard-panel">
-      <ShipmentInformation class="info-area" :btnisClicked="{ value: btnisClicked.value }" />
-      <ShipmentNetworkMap class="map-area" :btnisClicked="{ value: btnisClicked.value }" />
+      <ShipmentInformation
+        class="info-area"
+        :btnisClicked="{ value: btnisClicked.value }"
+        :isLogin="{ value: loginObject?.isLogin }"
+      />
+      <ShipmentNetworkMap
+        class="map-area"
+        :btnisClicked="{ value: btnisClicked.value }"
+        :isLogin="{ value: loginObject?.isLogin }"
+      />
     </div>
     <div class="right-dashboard-panel">
       <AnalyticsBanner

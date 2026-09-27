@@ -2,18 +2,25 @@
 import { ref, computed, onMounted, onUnmounted, inject } from "vue";
 const source = ref("Agadir");
 const destination = ref("Rabat");
-const shipmentID = ref("CGO-4821");
 const loadingDock = ref("Dock B2");
 const globalAMPMCapsule = inject("globalAMPM");
+
 const props = defineProps({
   btnisClicked: {
     type: Object,
     required: true,
   },
+  isLogin: {
+    type: Object,
+    required: true,
+  },
 });
-
+const shipmentID = computed(() => {
+  return Date.now().toString().slice(-4);
+});
 const departedTimeFormatted = computed(() => {
   const d = new Date();
+  d.setHours(d.getHours() + 10);
   const timeOptions = {
     hour: "2-digit",
     minute: "2-digit",
@@ -31,7 +38,7 @@ const departedTimeFormatted = computed(() => {
     <div class="head">
       <h3 class="txt">Shipment Information</h3>
     </div>
-    <div class="dashboard-infos">
+    <div class="dashboard-infos" v-show="isLogin?.value">
       <div class="contact-information custom-dash-bottom">
         <div class="contact-infos">
           <img src="../assets/operator.png" alt="" class="operator-img" />
@@ -48,7 +55,7 @@ const departedTimeFormatted = computed(() => {
       <div class="shipment-infos custom-dash-bottom">
         <div class="shipment-id">
           <div class="ttl">Shipment ID</div>
-          <div class="bdy txt">{{ shipmentID }}</div>
+          <div class="bdy txt">CGO-{{ shipmentID }}</div>
         </div>
         <div class="loading-dock">
           <div class="ttl">Loading Dock</div>
@@ -72,6 +79,7 @@ const departedTimeFormatted = computed(() => {
         </div>
       </div>
     </div>
+    <div v-show="!isLogin?.value">No Connection!!</div>
   </div>
 </template>
 
@@ -175,6 +183,7 @@ const departedTimeFormatted = computed(() => {
   display: flex;
   flex-direction: column;
   width: 380px;
+  min-height: 345px;
   padding: 30px;
   border-radius: 16px;
   box-shadow:
@@ -277,8 +286,5 @@ const departedTimeFormatted = computed(() => {
 
 .corps:hover i {
   color: var(--text-main);
-}
-
-.dashboard-infos {
 }
 </style>
