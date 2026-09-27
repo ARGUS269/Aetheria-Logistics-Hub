@@ -69,7 +69,6 @@ function submitClicked(val) {
   if (isClicked.value) {
     const incomingWeight = parseInt(val.weight) || 0;
     largeBoxPureWeight.value -= incomingWeight;
-    boxPureWeight.value = largeBoxPureWeight.value;
   }
   isClicked.value = false;
   emit("add-cargo", val);
@@ -120,6 +119,8 @@ function cargoClicked() {
   LoginisClicked.value = false;
   MessageisClicked.value = false;
   NotificationsisClicked.value = false;
+
+  boxPureWeight.value = largeBoxPureWeight.value;
 }
 
 function notificationsisClicked() {
@@ -291,7 +292,7 @@ function chevron() {
         @submit-clicked="submitClicked($event)"
         :cargoManifest="cargoManifest"
         :btnisClicked="{ value: btnisClicked.value }"
-        :boxPureWeight="{ value: boxPureWeight }"
+        :boxPureWeight="boxPureWeight"
       />
     </div>
   </Transition>

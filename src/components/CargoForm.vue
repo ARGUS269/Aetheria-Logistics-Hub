@@ -21,18 +21,23 @@ const props = defineProps({
     required: true,
   },
   boxPureWeight: {
-    type: Object,
+    type: Number,
     required: true,
   },
 });
 
 watch(
-  () => props.boxPureWeight?.value,
+  () => props.boxPureWeight,
   (newValue) => {
-    if (newValue !== 0) {
+    if (newValue !== undefined && newValue !== null && newValue !== 0) {
       maxValue.value = newValue;
+
+      if (massValue.value > newValue) {
+        massValue.value = newValue;
+      }
     }
   },
+  { immediate: true },
 );
 
 function chevron() {
@@ -66,8 +71,8 @@ function cargoSubmit() {
       id: `TRK-${isDuplicated(Date.now().toString().slice(-4))}`,
       destination: destinationCity.value,
       cargoType: categorization.value,
-      weight: massValue.value,
-      value: valValue.value,
+      weight: parseInt(massValue.value),
+      value: parseInt(valValue.value),
       status: "MANIFEST_CREATED",
       transitProgress: 0,
     });
@@ -93,7 +98,7 @@ function testInput() {
 
 <template>
   <div class="cargo-page-wrapper" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
-    <form @submit.prevent="dispatchSignal" class="form-container">
+    <form @submit.prevent="cargoSubmit" class="form-container">
       <label for="destinationField">Destination City: </label>
       <input
         name="destinationField"
@@ -132,7 +137,7 @@ function testInput() {
             id="scale-slider"
             min="10"
             :max="maxValue"
-            step="10"
+            step="1"
             list="scale-markers"
             v-model="massValue"
             class="slider-wrapper-mass"
@@ -173,7 +178,6 @@ function testInput() {
       </div>
       <button
         type="submit"
-        @click="cargoSubmit()"
         :disabled="isLaunched"
         :class="{ launchClass: isLaunched }"
       >
