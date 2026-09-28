@@ -54,7 +54,7 @@ watch(AMPMValue, () => {
       <div class="perso-name">
         <span>{{ loginObject?.fullName }}</span>
       </div>
-      <div class="perso-desc"><span>Administrator</span></div>
+      <div class="perso-desc"><span>{{ loginObject?.role }}</span></div>
       <div class="perso-email">
         <span>{{ loginObject?.email }}</span>
       </div>

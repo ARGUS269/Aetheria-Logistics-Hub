@@ -22,7 +22,6 @@ watch(
   (newUser) => {
     isLogin.value = !!newUser;
     if (newUser) {
-      // Auto-populate the email input from the injected session data if it exists
       emailField.value = newUser.email || "";
     }
   },

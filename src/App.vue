@@ -31,10 +31,8 @@ onMounted(async () => {
 
   if (hasTokenCookie) {
     try {
-      // Hit the centralized secure /auth/me profile endpoint
       const userProfile = await apiClient.getProfile();
 
-      // Populate global user memory directly from the verified server payload response
       loginObject.value = {
         ...userProfile,
         isLogin: true,
@@ -87,6 +85,7 @@ async function LoginClickedToParent(payload) {
       loginObject.value = {
         fullName: secureSessionData.fullName,
         email: secureSessionData.email,
+        role: secureSessionData.role,
         isLogin: true
       };
 
