@@ -1,5 +1,6 @@
 <script setup>
-import { ref, provide, computed } from "vue";
+import { ref, provide, computed, onMounted } from "vue";
+import { apiClient } from "@/api/client";
 
 const cargoManifest = ref([
   {
@@ -21,8 +22,30 @@ const cargoManifest = ref([
     transitProgress: 20,
   },
 ]);
+const isLoadingSession = ref(true);
 const btnisClicked = ref(false);
 const isClicked = ref(false);
+
+onMounted(async () => {
+  const hasTokenCookie = document.cookie.includes("ag_auth_session=true");
+
+  if (hasTokenCookie) {
+    try {
+      // Hit the centralized secure /auth/me profile endpoint
+      const userProfile = await apiClient.getProfile();
+
+      // Populate global user memory directly from the verified server payload response
+      loginObject.value = {
+        ...userProfile,
+        isLogin: true,
+      };
+    } catch (error) {
+      console.warn("Automatic token authentication failed:", error.message);
+      loginObject.value = null;
+    }
+  }
+  isLoadingSession.value = false;
+});
 
 function btnISClicked() {
   btnisClicked.value = !btnisClicked.value;
@@ -48,19 +71,33 @@ function NewMessage(payload) {
 function SubmitClickedToParent(payload) {
   cargoManifest.value.push(payload);
   console.log(cargoManifest.value);
-
 }
 
-function LoginClickedToParent(payload) {
+async function LoginClickedToParent(payload) {
   if (!payload || payload.isLogin === false) {
-    // If logging out, completely wipe the object reference so v-if evaluations switch back safely
     loginObject.value = null;
+    document.cookie = "ag_auth_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
   } else {
-    // If logging in, save the active payload dataset session
-    loginObject.value = payload;
+    try {
+      const secureSessionData = await apiClient.login({
+        email: payload.email,
+        password: payload.password
+      });
+
+      loginObject.value = {
+        fullName: secureSessionData.fullName,
+        email: secureSessionData.email,
+        isLogin: true
+      };
+
+      document.cookie = "ag_auth_session=true; path=/; max-age=86400; SameSite=Strict;";
+    } catch (error) {
+      alert(`Sign In Failed: ${error.message}`);
+    }
+
   }
 }
-function AMPMValue(payload){
+function AMPMValue(payload) {
   AMPMObject.value = payload;
 }
 </script>

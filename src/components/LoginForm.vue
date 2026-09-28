@@ -28,6 +28,13 @@ watch(
   },
   { deep: true, immediate: true },
 );
+function testEmailInput() {
+  inputError.value = false;
+  if (emailField.value === "") {
+    inputError.value = true;
+  }
+}
+
 function testPasswordInput() {
   inputError.value = false;
 }
@@ -52,7 +59,6 @@ function dispatchSignal() {
     emit("login-infos", { ...user.value, isLogin: true });
   } else {
     emit("login-infos", {
-      fullName: "AKOUDAD Abdessamad",
       email: emailField.value,
       password: passwordField.value,
       isRemembered: remember.value,
@@ -129,7 +135,7 @@ function dispatchSignalLogOut() {
     </form>
     <form @submit.prevent="dispatchSignalLogOut" class="form-container" v-else>
       <h2>Welcome back</h2>
-      <p class="subtitle">{{ user?.fullName || "AKOUDAD Abdessamad" }}</p>
+      <p class="subtitle">{{ user?.fullName || "Loading Operator Profile..." }}</p>
 
       <img src="../assets/man.png" alt="perso-photo" />
 
@@ -167,7 +173,10 @@ function dispatchSignalLogOut() {
   background-color: var(--bg-card);
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 h2 {
@@ -315,7 +324,9 @@ button {
   color: var(--text-main);
   font-weight: 600;
   font-size: 0.95rem;
-  transition: background-color 0.2s ease, transform 0.1s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 button:hover {
