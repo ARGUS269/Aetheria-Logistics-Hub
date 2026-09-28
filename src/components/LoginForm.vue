@@ -14,19 +14,9 @@ const emailField = ref("");
 const passwordField = ref("");
 const globalUserCapsule = inject("globalUser");
 const user = computed(() => globalUserCapsule?.value);
-const isLogin = ref(!!user.value);
 
 const emit = defineEmits(["login-infos"]);
-watch(
-  () => user.value,
-  (newUser) => {
-    isLogin.value = !!newUser;
-    if (newUser) {
-      emailField.value = newUser.email || "";
-    }
-  },
-  { deep: true, immediate: true },
-);
+
 function testEmailInput() {
   inputError.value = false;
   if (emailField.value === "") {
@@ -39,51 +29,40 @@ function testPasswordInput() {
 }
 
 function dispatchSignal() {
-  const fields = emailField.value.split("@");
-  const pointFields = emailField.value.split(".");
+  const fields = emailField.value.trim().split("@");
 
-  if (fields.length !== 2 || fields[1] !== "agcpn.com") {
+  if (fields.length !== 2) {
     inputError.value = true;
     return;
   }
-
-  if (pointFields.length !== 2) {
+  const domainSegment = fields[1];
+  if (domainSegment !== "agcpn.com") {
     inputError.value = true;
     return;
   }
-
-  isLogin.value = true;
 
   if (user?.value) {
-    emit("login-infos", { ...user.value, isLogin: true });
+    emit("login-infos", { ...user.value });
   } else {
     emit("login-infos", {
-      email: emailField.value,
+      email: emailField.value.trim(),
       password: passwordField.value,
-      isRemembered: remember.value,
-      isLogin: isLogin.value,
+      remember: remember.value,
     });
   }
 }
 
 function dispatchSignalLogOut() {
-  isLogin.value = false;
-
-  remember.value = false;
   emailField.value = "";
   passwordField.value = "";
 
-  emit("login-infos", {
-    isLogin: false,
-    fullName: null,
-    email: null,
-  });
+  emit("login-infos", null); // Safe, direct primitive null execution sync!
 }
 </script>
 
 <template>
   <div class="login-page-wrapper" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
-    <form @submit.prevent="dispatchSignal" class="form-container" v-if="!isLogin">
+    <form @submit.prevent="dispatchSignal" class="form-container" v-if="!user">
       <h2>Welcome back</h2>
       <p class="subtitle">Sign in to access your project and assets</p>
 
@@ -138,7 +117,7 @@ function dispatchSignalLogOut() {
 
       <img src="../assets/man.png" alt="perso-photo" />
 
-      <span>Your Email: {{ emailField || user?.email }}</span>
+      <span>Your Email: {{ user?.email || "Loading Operator Profile..." }}</span>
       <hr />
 
       <button type="submit">Log Out</button>

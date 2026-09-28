@@ -22,9 +22,11 @@ const cargoManifest = ref([
     transitProgress: 20,
   },
 ]);
-const isLoadingSession = ref(true);
 const btnisClicked = ref(false);
 const isClicked = ref(false);
+const userGreetingValue = ref([]);
+const loginObject = ref(null);
+const AMPMObject = ref("en-US");
 
 onMounted(async () => {
   const hasTokenCookie = document.cookie.includes("ag_auth_session=true");
@@ -35,24 +37,19 @@ onMounted(async () => {
 
       loginObject.value = {
         ...userProfile,
-        isLogin: true,
       };
     } catch (error) {
       console.warn("Automatic token authentication failed:", error.message);
       loginObject.value = null;
     }
   }
-  isLoadingSession.value = false;
 });
 
 function btnISClicked() {
   btnisClicked.value = !btnisClicked.value;
 }
 
-const userGreetingValue = ref([]);
 
-const loginObject = ref(null);
-const AMPMObject = ref("en-US");
 provide(
   "globalUser",
   computed(() => loginObject.value),
@@ -72,7 +69,8 @@ function SubmitClickedToParent(payload) {
 }
 
 async function LoginClickedToParent(payload) {
-  if (!payload || payload.isLogin === false) {
+  if (payload === null || !payload) {
+
     loginObject.value = null;
     document.cookie = "ag_auth_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
   } else {
@@ -81,15 +79,15 @@ async function LoginClickedToParent(payload) {
         email: payload.email,
         password: payload.password
       });
+      const cookieLifespan = payload?.remember ? 604800 : 600;
 
       loginObject.value = {
         fullName: secureSessionData.fullName,
         email: secureSessionData.email,
         role: secureSessionData.role,
-        isLogin: true
       };
 
-      document.cookie = "ag_auth_session=true; path=/; max-age=86400; SameSite=Strict;";
+      document.cookie = `ag_auth_session=true; path=/; max-age=${cookieLifespan}; SameSite=Strict;`;
     } catch (error) {
       alert(`Sign In Failed: ${error.message}`);
     }

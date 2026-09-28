@@ -45,13 +45,13 @@ watch(scrollProgress, (newProgress) => {
 });
 let workerTimeout = null;
 onMounted(() => {
-  if (props.loginObject?.isLogin && props.messages.length === 0) {
+  if (props.loginObject && props.messages.length === 0) {
     triggerWelcomeBanner();
   }
 });
 
 watch(
-  () => props.loginObject?.isLogin,
+  () => props.loginObject,
   (newIsLogin) => {
     if (newIsLogin) {
       triggerWelcomeBanner();
@@ -75,8 +75,6 @@ function submitClicked(val) {
 }
 
 function LoginClicked(val) {
-  if (!val) return;
-
   emit("add-infos", val);
 }
 
@@ -146,7 +144,7 @@ function chevron() {
   <header class="navbar-top" @click="clicked" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
     <div
       class="custom-select"
-      v-if="loginObject?.isLogin && loginObject"
+      v-if="loginObject"
       @click.stop="if (TransIsRotated) chevronClicked();"
     >
       <div class="select-trigger" @click="chevron">
@@ -176,7 +174,7 @@ function chevron() {
         MessageisClicked = !MessageisClicked;
         if (MessageisClicked) messageisClicked();
       "
-      :class="{ not: messages.length && loginObject?.isLogin }"
+      :class="{ not: messages.length && loginObject }"
     >
       <i class="fa-regular fa-message"></i>
     </div>
@@ -199,19 +197,19 @@ function chevron() {
       <ShipmentInformation
         class="info-area"
         :btnisClicked="{ value: btnisClicked.value }"
-        :isLogin="{ value: loginObject?.isLogin }"
+        :isLogin="{ value: !!loginObject }"
       />
       <ShipmentNetworkMap
         class="map-area"
         :btnisClicked="{ value: btnisClicked.value }"
-        :isLogin="{ value: loginObject?.isLogin }"
+        :isLogin="{ value: !!loginObject }"
       />
     </div>
     <div class="right-dashboard-panel">
       <div class="right-top-dashboard-panel">
         <AnalyticsBanner
           :cargoManifest="cargoManifest"
-          :isLogin="{ value: loginObject?.isLogin }"
+          :isLogin="{ value: !!loginObject }"
           class="banner-area"
           :btnisClicked="{ value: btnisClicked.value }"
         />
@@ -233,7 +231,7 @@ function chevron() {
           <div class="cargo-truck-container" ref="truckWrapperRef">
             <img src="../assets/cargo-truck-background.png" alt="cargo truck" />
             <div class="trailer-mask-bg">
-              <div class="trailer-cargo-grid" v-show="loginObject?.isLogin">
+              <div class="trailer-cargo-grid" v-show="loginObject">
                 <div class="cargo-box small-box">
                   <div class="box-header"><span>PLT</span><span>Max kg</span></div>
                   <div class="box-route">3-CHI-ATL</div>
@@ -307,7 +305,7 @@ function chevron() {
       <MessageComponent
         :message="{ value: 'Notifications' }"
         :messageValue="messages"
-        :isLogin="{ value: loginObject?.isLogin }"
+        :isLogin="{ value: !!loginObject}"
         :btnisClicked="{ value: btnisClicked.value }"
       />
     </div>
@@ -317,7 +315,7 @@ function chevron() {
       <MessageComponent
         :message="{ value: 'Messages' }"
         :messageValue="messages"
-        :isLogin="{ value: loginObject?.isLogin }"
+        :isLogin="{ value: !!loginObject }"
         :btnisClicked="{ value: btnisClicked.value }"
       />
     </div>
