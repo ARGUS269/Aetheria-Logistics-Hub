@@ -49,7 +49,7 @@ watch(AMPMValue, () => {
 
 <template>
   <div class="settings-page-wrapper" :data-theme="btnisClicked?.value ? 'dark' : 'light'">
-    <div class="infos" v-if="loginObject?.isLogin">
+    <div class="infos" v-if="!!loginObject">
       <div class="perso-photo"><img src="../assets/man.png" alt="" class="operator-img" /></div>
       <div class="perso-name">
         <span>{{ loginObject?.fullName }}</span>
