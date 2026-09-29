@@ -54,7 +54,9 @@ watch(AMPMValue, () => {
       <div class="perso-name">
         <span>{{ loginObject?.fullName }}</span>
       </div>
-      <div class="perso-desc"><span>{{ loginObject?.role }}</span></div>
+      <div class="perso-desc">
+        <span>{{ loginObject?.role }}</span>
+      </div>
       <div class="perso-email">
         <span>{{ loginObject?.email }}</span>
       </div>
@@ -67,22 +69,24 @@ watch(AMPMValue, () => {
           <i class="fa-solid" :class="btnisClicked?.value ? 'fa-sun' : 'fa-moon'"></i>
         </div>
       </label>
-
-      <div class="custom-select">
-        <div class="select-trigger" @click="chevron">
-          <span>{{ AMPMValue }}</span>
-          <div>
-            <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+      <label for="theme">
+        Regional Format:
+        <div class="custom-select">
+          <div class="select-trigger" @click="chevron">
+            <span>{{ AMPMValue }}</span>
+            <div>
+              <i class="fa-solid fa-chevron-down" :class="{ 'rotated-state': TransIsRotated }"></i>
+            </div>
           </div>
-        </div>
-        <Transition name="shrink-square">
-          <ul class="select-options" v-if="TransIsRotated">
-            <li class="first-li" @click="selectOption('en-US')">en-US</li>
-            <li @click="selectOption('en-GB')">en-GB</li>
-            <li @click="selectOption('zh-CN')">zh-CN</li>
-          </ul>
-        </Transition>
-      </div>
+          <Transition name="shrink-square">
+            <ul class="select-options" v-if="TransIsRotated">
+              <li class="first-li" @click="selectOption('en-US')">en-US</li>
+              <li @click="selectOption('en-GB')">en-GB</li>
+              <li @click="selectOption('zh-CN')">zh-CN</li>
+            </ul>
+          </Transition>
+        </div></label
+      >
     </div>
   </div>
 </template>
@@ -122,7 +126,7 @@ watch(AMPMValue, () => {
   cursor: pointer;
 
   color: var(--text-main);
-
+  width: 140px;
   padding: 10px 14px;
   border: 1px solid var(--border-color);
   border-radius: 6px;
